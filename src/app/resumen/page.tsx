@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -28,28 +27,18 @@ const MESES = [
 ];
 
 export default function ResumenPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [resumen, setResumen] = useState<ResumenMes[]>([]);
   const [anio, setAnio] = useState(new Date().getFullYear());
   const [cotizacion, setCotizacion] = useState(1000);
   const [moneda, setMoneda] = useState("ARS");
 
   useEffect(() => {
-    fetch("/api/auth/verify").then((r) => {
-      if (!r.ok) router.push("/");
-      else setLoading(false);
-    });
-  }, [router]);
-
-  useEffect(() => {
-    if (!loading) {
-      fetch(`/api/resumen?anio=${anio}`)
-        .then((r) => r.json())
-        .then(setResumen)
-        .catch(() => {});
-    }
-  }, [loading, anio]);
+    fetch(`/api/resumen?anio=${anio}`)
+      .then((r) => r.json())
+      .then(setResumen)
+      .catch(() => {});
+  }, [anio]);
 
   const fmt = (val: number) => {
     const display = moneda === "USD" ? val / cotizacion : val;

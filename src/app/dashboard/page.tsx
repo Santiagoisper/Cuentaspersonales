@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import {
@@ -32,27 +31,20 @@ interface ResumenMes {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [resumen, setResumen] = useState<ResumenMes[]>([]);
   const [cotizacion, setCotizacion] = useState(1000);
   const [moneda, setMoneda] = useState("ARS");
 
   useEffect(() => {
-    fetch("/api/auth/verify").then((r) => {
-      if (!r.ok) router.push("/");
-      else setLoading(false);
-    });
-  }, [router]);
-
-  useEffect(() => {
-    if (!loading) {
-      fetch(`/api/resumen?anio=${new Date().getFullYear()}`)
-        .then((r) => r.json())
-        .then(setResumen)
-        .catch(() => {});
-    }
-  }, [loading]);
+    fetch(`/api/resumen?anio=${new Date().getFullYear()}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setResumen(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const formatMonto = (val: number) => {
     const display = moneda === "USD" ? val / cotizacion : val;

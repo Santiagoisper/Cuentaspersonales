@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import MonthSelector from "@/components/MonthSelector";
@@ -38,8 +37,7 @@ const CAT_COLORS: Record<string, string> = {
 };
 
 export default function EgresosPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [egresos, setEgresos] = useState<Egreso[]>([]);
   const [egresosPrev, setEgresosPrev] = useState<Egreso[]>([]);
   const [mes, setMes] = useState(new Date().getMonth() + 1);
@@ -51,13 +49,6 @@ export default function EgresosPage() {
   const [formCat, setFormCat] = useState("");
   const [formSubcat, setFormSubcat] = useState("");
   const [formMonto, setFormMonto] = useState("");
-
-  useEffect(() => {
-    fetch("/api/auth/verify").then((r) => {
-      if (!r.ok) router.push("/");
-      else setLoading(false);
-    });
-  }, [router]);
 
   const fetchData = useCallback(() => {
     fetch(`/api/egresos?anio=${anio}&mes=${mes}`)
@@ -75,8 +66,8 @@ export default function EgresosPage() {
   }, [anio, mes]);
 
   useEffect(() => {
-    if (!loading) fetchData();
-  }, [loading, fetchData]);
+    fetchData();
+  }, [fetchData]);
 
   const handleMonthChange = (m: number, a: number) => {
     setMes(m);

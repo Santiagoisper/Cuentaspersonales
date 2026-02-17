@@ -9,7 +9,6 @@ import {
   Table2,
   Landmark,
   DollarSign,
-  LogOut,
   Menu,
   X,
 } from "lucide-react";
@@ -27,11 +26,6 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-
-  const handleLogout = async () => {
-    document.cookie = "auth-token=; Max-Age=0; path=/";
-    window.location.href = "/";
-  };
 
   return (
     <>
@@ -85,15 +79,6 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#334155]">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#94a3b8] hover:bg-red-500/10 hover:text-red-400 transition-all w-full"
-          >
-            <LogOut size={20} />
-            <span className="font-medium">Cerrar Sesión</span>
-          </button>
-        </div>
       </aside>
     </>
   );

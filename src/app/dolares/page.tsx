@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import Modal from "@/components/Modal";
@@ -25,8 +24,7 @@ const UBICACION_ICONS: Record<string, typeof DollarSign> = {
 const COLORS = ["#3b82f6", "#a855f7", "#22c55e", "#eab308", "#ef4444", "#06b6d4"];
 
 export default function DolaresPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [dolares, setDolares] = useState<Dolar[]>([]);
   const [cotizacion, setCotizacion] = useState(1000);
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,13 +32,6 @@ export default function DolaresPage() {
   const [fUbicacion, setFUbicacion] = useState("");
   const [fDetalle, setFDetalle] = useState("");
   const [fMonto, setFMonto] = useState("");
-
-  useEffect(() => {
-    fetch("/api/auth/verify").then((r) => {
-      if (!r.ok) router.push("/");
-      else setLoading(false);
-    });
-  }, [router]);
 
   const fetchData = useCallback(() => {
     fetch("/api/dolares")
@@ -50,8 +41,8 @@ export default function DolaresPage() {
   }, []);
 
   useEffect(() => {
-    if (!loading) fetchData();
-  }, [loading, fetchData]);
+    fetchData();
+  }, [fetchData]);
 
   const openAdd = () => {
     setEditItem(null);

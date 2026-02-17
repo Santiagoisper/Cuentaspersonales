@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import Modal from "@/components/Modal";
@@ -42,8 +41,7 @@ const TIPOS = ["activo", "inversion"];
 const TIPOS_COCOS = ["CAUCIONES", "ACCIONES", "LETRAS", "Obligaciones Negociables", "BONOS", "Otros"];
 
 export default function ActivosPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activos, setActivos] = useState<Activo[]>([]);
   const [historial, setHistorial] = useState<HistorialItem[]>([]);
   const [inversiones, setInversiones] = useState<InversionCocos[]>([]);
@@ -65,13 +63,6 @@ export default function ActivosPage() {
   const [fInvDesc, setFInvDesc] = useState("");
   const [fInvMonto, setFInvMonto] = useState("");
 
-  useEffect(() => {
-    fetch("/api/auth/verify").then((r) => {
-      if (!r.ok) router.push("/");
-      else setLoading(false);
-    });
-  }, [router]);
-
   const fetchData = useCallback(() => {
     fetch("/api/activos")
       .then((r) => r.json())
@@ -88,8 +79,8 @@ export default function ActivosPage() {
   }, []);
 
   useEffect(() => {
-    if (!loading) fetchData();
-  }, [loading, fetchData]);
+    fetchData();
+  }, [fetchData]);
 
   const fmt = (val: number) => {
     const display = moneda === "USD" ? val / cotizacion : val;

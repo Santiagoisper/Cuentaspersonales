@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import MonthSelector from "@/components/MonthSelector";
@@ -26,8 +25,7 @@ const CATEGORIAS_INGRESO = [
 ];
 
 export default function IngresosPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [ingresos, setIngresos] = useState<Ingreso[]>([]);
   const [ingresosPrev, setIngresosPrev] = useState<Ingreso[]>([]);
   const [mes, setMes] = useState(new Date().getMonth() + 1);
@@ -38,13 +36,6 @@ export default function IngresosPage() {
   const [editItem, setEditItem] = useState<Ingreso | null>(null);
   const [formCat, setFormCat] = useState("");
   const [formMonto, setFormMonto] = useState("");
-
-  useEffect(() => {
-    fetch("/api/auth/verify").then((r) => {
-      if (!r.ok) router.push("/");
-      else setLoading(false);
-    });
-  }, [router]);
 
   const fetchData = useCallback(() => {
     fetch(`/api/ingresos?anio=${anio}&mes=${mes}`)
@@ -61,8 +52,8 @@ export default function IngresosPage() {
   }, [anio, mes]);
 
   useEffect(() => {
-    if (!loading) fetchData();
-  }, [loading, fetchData]);
+    fetchData();
+  }, [fetchData]);
 
   const formatMonto = (val: number) => {
     const display = moneda === "USD" ? val / cotizacion : val;
