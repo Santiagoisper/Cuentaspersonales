@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -18,21 +18,21 @@ interface Egreso {
 
 const CATEGORIAS: Record<string, string[]> = {
   "Vivienda": ["Expensas Velvet"],
-  "Educación": ["Pestalozzi", "Uni. de San Andrés"],
+  "EducaciÃ³n": ["Pestalozzi", "Uni. de San AndrÃ©s"],
   "Tarjetas": ["Amex", "Visa Galicia", "Master Galicia", "Tarjeta ML"],
   "Servicios": ["Edenor", "Movistar", "Ipan", "Otros"],
   "Personales": ["Monotributo"],
-  "Vehículos": ["Patente Moto", "Patente Auto"],
+  "VehÃ­culos": ["Patente Moto", "Patente Auto"],
   "Limpieza": ["Norma"],
 };
 
 const CAT_COLORS: Record<string, string> = {
   "Vivienda": "bg-blue-500/20 text-blue-400",
-  "Educación": "bg-purple-500/20 text-purple-400",
+  "EducaciÃ³n": "bg-purple-500/20 text-purple-400",
   "Tarjetas": "bg-yellow-500/20 text-yellow-400",
   "Servicios": "bg-cyan-500/20 text-cyan-400",
   "Personales": "bg-pink-500/20 text-pink-400",
-  "Vehículos": "bg-orange-500/20 text-orange-400",
+  "VehÃ­culos": "bg-orange-500/20 text-orange-400",
   "Limpieza": "bg-green-500/20 text-green-400",
 };
 
@@ -52,17 +52,23 @@ export default function EgresosPage() {
 
   const fetchData = useCallback(() => {
     fetch(`/api/egresos?anio=${anio}&mes=${mes}`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+      })
       .then((data) => setEgresos(data))
-      .catch(() => {});
+      .catch(() => setEgresos([]));
 
     // Fetch previous month
     const prevMes = mes === 1 ? 12 : mes - 1;
     const prevAnio = mes === 1 ? anio - 1 : anio;
     fetch(`/api/egresos?anio=${prevAnio}&mes=${prevMes}`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+      })
       .then((data) => setEgresosPrev(data))
-      .catch(() => {});
+      .catch(() => setEgresosPrev([]));
   }, [anio, mes]);
 
   useEffect(() => {
@@ -113,7 +119,7 @@ export default function EgresosPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("¿Eliminar este egreso?")) return;
+    if (!confirm("Â¿Eliminar este egreso?")) return;
     await fetch("/api/egresos", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -124,7 +130,7 @@ export default function EgresosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -142,18 +148,18 @@ export default function EgresosPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#f4f8ff]">
       <Sidebar />
-      <main className="lg:ml-64 p-6 lg:p-8">
+      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Egresos</h1>
-              <p className="text-[#94a3b8]">Gastos mensuales por categoría</p>
+              <h1 className="text-2xl font-bold text-[#0a2a66]">Egresos</h1>
+              <p className="text-[#5a6f99]">Gastos mensuales por categorÃ­a</p>
             </div>
             <button
               onClick={openAdd}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1650c7] hover:bg-[#1141a6] text-white font-medium transition-colors"
             >
               <Plus size={18} /> Agregar
             </button>
@@ -163,10 +169,10 @@ export default function EgresosPage() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <MonthSelector mes={mes} anio={anio} onChange={handleMonthChange} />
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] px-6 py-4">
+            <div className="bg-white rounded-xl border border-[#d7e4ff] px-6 py-4">
               <div className="flex items-center gap-4">
                 <div>
-                  <p className="text-sm text-[#94a3b8]">Total del Mes</p>
+                  <p className="text-sm text-[#5a6f99]">Total del Mes</p>
                   <p className="text-xl font-bold text-red-400">{formatMonto(total)}</p>
                 </div>
                 {diff !== 0 && (
@@ -187,24 +193,24 @@ export default function EgresosPage() {
               const colorClass = CAT_COLORS[cat] || "bg-gray-500/20 text-gray-400";
 
               return (
-                <div key={cat} className="bg-[#1e293b] rounded-xl border border-[#334155] overflow-hidden">
-                  <div className="flex items-center justify-between p-4 border-b border-[#334155]">
+                <div key={cat} className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
+                  <div className="flex items-center justify-between p-4 border-b border-[#d7e4ff]">
                     <div className="flex items-center gap-3">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>{cat}</span>
                     </div>
-                    <span className="font-bold text-white">{formatMonto(catTotal)}</span>
+                    <span className="font-bold text-[#0a2a66]">{formatMonto(catTotal)}</span>
                   </div>
                   {items.length > 0 ? (
-                    <div className="divide-y divide-[#334155]">
+                    <div className="divide-y divide-[#e5edff]">
                       {items.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#334155]/30 transition-colors">
-                          <span className="text-[#94a3b8]">{item.subcategoria}</span>
+                        <div key={item.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#eef4ff]/30 transition-colors">
+                          <span className="text-[#5a6f99]">{item.subcategoria}</span>
                           <div className="flex items-center gap-3">
-                            <span className="font-medium text-white">{formatMonto(Number(item.monto))}</span>
-                            <button onClick={() => openEdit(item)} className="text-[#64748b] hover:text-blue-400 transition-colors">
+                            <span className="font-medium text-[#0a2a66]">{formatMonto(Number(item.monto))}</span>
+                            <button onClick={() => openEdit(item)} className="text-[#7a8fb8] hover:text-blue-400 transition-colors">
                               <Pencil size={16} />
                             </button>
-                            <button onClick={() => handleDelete(item.id)} className="text-[#64748b] hover:text-red-400 transition-colors">
+                            <button onClick={() => handleDelete(item.id)} className="text-[#7a8fb8] hover:text-red-400 transition-colors">
                               <Trash2 size={16} />
                             </button>
                           </div>
@@ -212,7 +218,7 @@ export default function EgresosPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="px-4 py-3 text-sm text-[#64748b]">Sin gastos registrados</p>
+                    <p className="px-4 py-3 text-sm text-[#7a8fb8]">Sin gastos registrados</p>
                   )}
                 </div>
               );
@@ -223,14 +229,14 @@ export default function EgresosPage() {
           <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar Egreso" : "Agregar Egreso"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Categoría</label>
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">CategorÃ­a</label>
                 <select
                   value={formCat}
                   onChange={(e) => {
                     setFormCat(e.target.value);
                     setFormSubcat(CATEGORIAS[e.target.value]?.[0] || "");
                   }}
-                  className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]"
                 >
                   {Object.keys(CATEGORIAS).map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -238,11 +244,11 @@ export default function EgresosPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Subcategoría</label>
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">SubcategorÃ­a</label>
                 <select
                   value={formSubcat}
                   onChange={(e) => setFormSubcat(e.target.value)}
-                  className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]"
                 >
                   {(CATEGORIAS[formCat] || []).map((s) => (
                     <option key={s} value={s}>{s}</option>
@@ -250,18 +256,18 @@ export default function EgresosPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Monto</label>
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Monto</label>
                 <input
                   type="number"
                   value={formMonto}
                   onChange={(e) => setFormMonto(e.target.value)}
                   placeholder="0.00"
-                  className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]"
                 />
               </div>
               <button
                 onClick={handleSave}
-                className="w-full py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
+                className="w-full py-2 rounded-lg bg-[#1650c7] hover:bg-[#1141a6] text-white font-medium transition-colors"
               >
                 {editItem ? "Actualizar" : "Guardar"}
               </button>
@@ -272,3 +278,5 @@ export default function EgresosPage() {
     </div>
   );
 }
+
+

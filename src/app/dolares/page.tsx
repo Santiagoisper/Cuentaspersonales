@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -35,9 +35,12 @@ export default function DolaresPage() {
 
   const fetchData = useCallback(() => {
     fetch("/api/dolares")
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+      })
       .then(setDolares)
-      .catch(() => {});
+      .catch(() => setDolares([]));
   }, []);
 
   useEffect(() => {
@@ -71,14 +74,14 @@ export default function DolaresPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("¿Eliminar este registro?")) return;
+    if (!confirm("Â¿Eliminar este registro?")) return;
     await fetch("/api/dolares", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -100,14 +103,14 @@ export default function DolaresPage() {
   })).filter((d) => d.value > 0);
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#f4f8ff]">
       <Sidebar />
-      <main className="lg:ml-64 p-6 lg:p-8">
+      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Dólares</h1>
-              <p className="text-[#94a3b8]">Tenencias en dólares por ubicación</p>
+              <h1 className="text-2xl font-bold text-[#0a2a66]">DÃ³lares</h1>
+              <p className="text-[#5a6f99]">Tenencias en dÃ³lares por ubicaciÃ³n</p>
             </div>
             <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors">
               <Plus size={18} /> Agregar
@@ -117,15 +120,15 @@ export default function DolaresPage() {
           <DollarBanner onCotizacionChange={setCotizacion} />
 
           {/* Total */}
-          <div className="bg-gradient-to-r from-yellow-500/10 to-[#1e293b] rounded-xl border border-yellow-500/20 p-6">
+          <div className="bg-gradient-to-r from-yellow-500/10 to-[#ffffff] rounded-xl border border-yellow-500/20 p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-yellow-500/20 rounded-xl">
                 <DollarSign className="text-yellow-400" size={28} />
               </div>
               <div>
-                <p className="text-sm text-[#94a3b8]">Total en Dólares</p>
+                <p className="text-sm text-[#5a6f99]">Total en DÃ³lares</p>
                 <p className="text-3xl font-bold text-yellow-400">U$S {totalUSD.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</p>
-                <p className="text-sm text-[#94a3b8] mt-1">
+                <p className="text-sm text-[#5a6f99] mt-1">
                   Equivalente: $ {totalARS.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </p>
               </div>
@@ -135,10 +138,10 @@ export default function DolaresPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pie Chart */}
             {pieData.length > 0 && (
-              <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
-                <h2 className="text-lg font-semibold text-white mb-4">Distribución</h2>
+              <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
+                <h2 className="text-lg font-semibold text-[#0a2a66] mb-4">DistribuciÃ³n</h2>
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                     <PieChart>
                       <Pie
                         data={pieData}
@@ -155,10 +158,10 @@ export default function DolaresPage() {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#1e293b",
-                          border: "1px solid #334155",
+                          backgroundColor: "#ffffff",
+                          border: "1px solid #d7e4ff",
                           borderRadius: "8px",
-                          color: "#f1f5f9",
+                          color: "#0a2a66",
                         }}
                         formatter={(value) => [`U$S ${Number(value).toLocaleString("es-AR")}`, ""]}
                       />
@@ -169,7 +172,7 @@ export default function DolaresPage() {
                   {pieData.map((d, i) => (
                     <div key={d.name} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                      <span className="text-sm text-[#94a3b8]">{d.name}</span>
+                      <span className="text-sm text-[#5a6f99]">{d.name}</span>
                     </div>
                   ))}
                 </div>
@@ -184,29 +187,29 @@ export default function DolaresPage() {
                 const Icon = UBICACION_ICONS[ubi] || DollarSign;
 
                 return (
-                  <div key={ubi} className="bg-[#1e293b] rounded-xl border border-[#334155] overflow-hidden">
-                    <div className="flex items-center justify-between p-4 border-b border-[#334155]">
+                  <div key={ubi} className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
+                    <div className="flex items-center justify-between p-4 border-b border-[#d7e4ff]">
                       <div className="flex items-center gap-3">
                         <Icon size={18} className="text-yellow-400" />
-                        <span className="font-medium text-white">{ubi}</span>
+                        <span className="font-medium text-[#0a2a66]">{ubi}</span>
                       </div>
                       <span className="font-bold text-yellow-400">U$S {total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
                     </div>
                     {items.length > 0 ? (
-                      <div className="divide-y divide-[#334155]">
+                      <div className="divide-y divide-[#e5edff]">
                         {items.map((d) => (
-                          <div key={d.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#334155]/30 transition-colors">
-                            <span className="text-[#94a3b8]">{d.detalle || ubi}</span>
+                          <div key={d.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#eef4ff]/30 transition-colors">
+                            <span className="text-[#5a6f99]">{d.detalle || ubi}</span>
                             <div className="flex items-center gap-3">
-                              <span className="font-medium text-white">U$S {Number(d.monto).toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
-                              <button onClick={() => openEdit(d)} className="text-[#64748b] hover:text-blue-400"><Pencil size={16} /></button>
-                              <button onClick={() => handleDelete(d.id)} className="text-[#64748b] hover:text-red-400"><Trash2 size={16} /></button>
+                              <span className="font-medium text-[#0a2a66]">U$S {Number(d.monto).toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
+                              <button onClick={() => openEdit(d)} className="text-[#7a8fb8] hover:text-blue-400"><Pencil size={16} /></button>
+                              <button onClick={() => handleDelete(d.id)} className="text-[#7a8fb8] hover:text-red-400"><Trash2 size={16} /></button>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="px-4 py-3 text-sm text-[#64748b]">Sin registros</p>
+                      <p className="px-4 py-3 text-sm text-[#7a8fb8]">Sin registros</p>
                     )}
                   </div>
                 );
@@ -215,23 +218,23 @@ export default function DolaresPage() {
           </div>
 
           {/* Modal */}
-          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar Dólares" : "Agregar Dólares"}>
+          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar DÃ³lares" : "Agregar DÃ³lares"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Ubicación</label>
-                <select value={fUbicacion} onChange={(e) => setFUbicacion(e.target.value)} className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white">
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">UbicaciÃ³n</label>
+                <select value={fUbicacion} onChange={(e) => setFUbicacion(e.target.value)} className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]">
                   {UBICACIONES.map((u) => <option key={u} value={u}>{u}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">
-                  Detalle {fUbicacion === "PRESTADO" && "(¿A quién?)"}
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">
+                  Detalle {fUbicacion === "PRESTADO" && "(Â¿A quiÃ©n?)"}
                 </label>
-                <input type="text" value={fDetalle} onChange={(e) => setFDetalle(e.target.value)} placeholder={fUbicacion === "PRESTADO" ? "Nombre de la persona..." : "Detalle opcional..."} className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white" />
+                <input type="text" value={fDetalle} onChange={(e) => setFDetalle(e.target.value)} placeholder={fUbicacion === "PRESTADO" ? "Nombre de la persona..." : "Detalle opcional..."} className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Monto (USD)</label>
-                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white" />
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Monto (USD)</label>
+                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]" />
               </div>
               <button onClick={handleSave} className="w-full py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors">
                 {editItem ? "Actualizar" : "Guardar"}
@@ -243,3 +246,5 @@ export default function DolaresPage() {
     </div>
   );
 }
+
+

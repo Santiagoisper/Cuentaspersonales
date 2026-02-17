@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -28,16 +28,16 @@ export default function MonthSelector({ mes, anio, onChange }: MonthSelectorProp
     <div className="flex items-center gap-4">
       <button
         onClick={prev}
-        className="p-2 rounded-lg bg-[#334155] hover:bg-[#475569] transition-colors"
+        className="p-2 rounded-xl border border-[#c9dbff] bg-white hover:bg-[#eef4ff] transition-colors text-[#1650c7]"
       >
         <ChevronLeft size={18} />
       </button>
-      <span className="text-lg font-semibold min-w-[180px] text-center">
+      <span className="text-lg font-semibold min-w-[180px] text-center text-[#0a2a66]">
         {MESES[mes - 1]} {anio}
       </span>
       <button
         onClick={next}
-        className="p-2 rounded-lg bg-[#334155] hover:bg-[#475569] transition-colors"
+        className="p-2 rounded-xl border border-[#c9dbff] bg-white hover:bg-[#eef4ff] transition-colors text-[#1650c7]"
       >
         <ChevronRight size={18} />
       </button>

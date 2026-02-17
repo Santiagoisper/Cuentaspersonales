@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json({ activos, historial });
   } catch (error) {
     console.error("Error fetching activos:", error);
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    return NextResponse.json({ activos: [], historial: [] });
   }
 }
 

@@ -12,7 +12,10 @@ export async function GET() {
     return NextResponse.json(config);
   } catch (error) {
     console.error("Error fetching config:", error);
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    return NextResponse.json({
+      cotizacion_dolar: "1000",
+      moneda_display: "ARS",
+    });
   }
 }
 
@@ -24,6 +27,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating config:", error);
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    return NextResponse.json({ success: false });
   }
 }

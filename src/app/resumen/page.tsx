@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -27,17 +27,35 @@ const MESES = [
 ];
 
 export default function ResumenPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [resumen, setResumen] = useState<ResumenMes[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [anio, setAnio] = useState(new Date().getFullYear());
   const [cotizacion, setCotizacion] = useState(1000);
   const [moneda, setMoneda] = useState("ARS");
 
   useEffect(() => {
+    setLoading(true);
     fetch(`/api/resumen?anio=${anio}`)
-      .then((r) => r.json())
-      .then(setResumen)
-      .catch(() => {});
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) {
+          throw new Error(data?.error || "No se pudo cargar el resumen.");
+        }
+        if (!Array.isArray(data)) {
+          throw new Error("Respuesta invalida del resumen.");
+        }
+        return data as ResumenMes[];
+      })
+      .then((data) => {
+        setResumen(data);
+        setError(null);
+      })
+      .catch((err) => {
+        setResumen([]);
+        setError(err instanceof Error ? err.message : "Error al cargar datos.");
+      })
+      .finally(() => setLoading(false));
   }, [anio]);
 
   const fmt = (val: number) => {
@@ -48,8 +66,24 @@ export default function ResumenPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#f4f8ff]">
+        <Sidebar />
+        <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white border border-red-500/30 rounded-xl p-6">
+              <h1 className="text-xl font-bold text-[#0a2a66] mb-2">Error al cargar el resumen</h1>
+              <p className="text-red-300">{error}</p>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -64,61 +98,61 @@ export default function ResumenPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#f4f8ff]">
       <Sidebar />
-      <main className="lg:ml-64 p-6 lg:p-8">
+      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
         <div className="max-w-6xl mx-auto space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-white">Resumen General</h1>
-            <p className="text-[#94a3b8]">Comparativa mensual de ingresos vs egresos</p>
+            <h1 className="text-2xl font-bold text-[#0a2a66]">Resumen General</h1>
+            <p className="text-[#5a6f99]">Comparativa mensual de ingresos vs egresos</p>
           </div>
 
           <DollarBanner onCotizacionChange={setCotizacion} onMonedaChange={setMoneda} />
 
           {/* Year selector */}
           <div className="flex items-center gap-4">
-            <button onClick={() => setAnio(anio - 1)} className="p-2 rounded-lg bg-[#334155] hover:bg-[#475569] transition-colors">
+            <button onClick={() => setAnio(anio - 1)} className="p-2 rounded-lg bg-[#eef4ff] hover:bg-[#dbe8ff] transition-colors">
               <ChevronLeft size={18} />
             </button>
-            <span className="text-xl font-bold text-white">{anio}</span>
-            <button onClick={() => setAnio(anio + 1)} className="p-2 rounded-lg bg-[#334155] hover:bg-[#475569] transition-colors">
+            <span className="text-xl font-bold text-[#0a2a66]">{anio}</span>
+            <button onClick={() => setAnio(anio + 1)} className="p-2 rounded-lg bg-[#eef4ff] hover:bg-[#dbe8ff] transition-colors">
               <ChevronRight size={18} />
             </button>
           </div>
 
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-5">
-              <p className="text-sm text-[#94a3b8]">Total Ingresos {anio}</p>
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-5">
+              <p className="text-sm text-[#5a6f99]">Total Ingresos {anio}</p>
               <p className="text-2xl font-bold text-green-400 mt-1">{fmt(totalIng)}</p>
             </div>
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-5">
-              <p className="text-sm text-[#94a3b8]">Total Egresos {anio}</p>
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-5">
+              <p className="text-sm text-[#5a6f99]">Total Egresos {anio}</p>
               <p className="text-2xl font-bold text-red-400 mt-1">{fmt(totalEgr)}</p>
             </div>
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-5">
-              <p className="text-sm text-[#94a3b8]">Balance {anio}</p>
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-5">
+              <p className="text-sm text-[#5a6f99]">Balance {anio}</p>
               <p className={`text-2xl font-bold mt-1 ${totalDiff >= 0 ? "text-green-400" : "text-red-400"}`}>{fmt(totalDiff)}</p>
             </div>
           </div>
 
           {/* Table */}
-          <div className="bg-[#1e293b] rounded-xl border border-[#334155] overflow-hidden">
+          <div className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-[#334155]">
-                    <th className="px-6 py-4 text-left text-sm font-medium text-[#94a3b8]">Mes</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#94a3b8]">Ingresos</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#94a3b8]">Egresos</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#94a3b8]">Diferencia</th>
-                    <th className="px-6 py-4 text-center text-sm font-medium text-[#94a3b8]">Tendencia</th>
+                  <tr className="border-b border-[#d7e4ff]">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#5a6f99]">Mes</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Ingresos</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Egresos</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Diferencia</th>
+                    <th className="px-6 py-4 text-center text-sm font-medium text-[#5a6f99]">Tendencia</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#334155]">
+                <tbody className="divide-y divide-[#e5edff]">
                   {resumen.map((r) => (
-                    <tr key={r.mes} className="hover:bg-[#334155]/30 transition-colors">
-                      <td className="px-6 py-4 font-medium text-white">{MESES[r.mes - 1]}</td>
+                    <tr key={r.mes} className="hover:bg-[#eef4ff]/30 transition-colors">
+                      <td className="px-6 py-4 font-medium text-[#0a2a66]">{MESES[r.mes - 1]}</td>
                       <td className="px-6 py-4 text-right text-green-400 font-medium">{fmt(r.ingresos)}</td>
                       <td className="px-6 py-4 text-right text-red-400 font-medium">{fmt(r.egresos)}</td>
                       <td className={`px-6 py-4 text-right font-bold ${r.diferencia >= 0 ? "text-green-400" : "text-red-400"}`}>
@@ -130,15 +164,15 @@ export default function ResumenPage() {
                         ) : r.diferencia < 0 ? (
                           <TrendingDown className="inline text-red-400" size={18} />
                         ) : (
-                          <Minus className="inline text-[#64748b]" size={18} />
+                          <Minus className="inline text-[#7a8fb8]" size={18} />
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="border-t-2 border-[#475569] bg-[#0f172a]/50">
-                    <td className="px-6 py-4 font-bold text-white">TOTAL</td>
+                  <tr className="border-t-2 border-[#c9dbff] bg-[#f4f8ff]/50">
+                    <td className="px-6 py-4 font-bold text-[#0a2a66]">TOTAL</td>
                     <td className="px-6 py-4 text-right font-bold text-green-400">{fmt(totalIng)}</td>
                     <td className="px-6 py-4 text-right font-bold text-red-400">{fmt(totalEgr)}</td>
                     <td className={`px-6 py-4 text-right font-bold ${totalDiff >= 0 ? "text-green-400" : "text-red-400"}`}>
@@ -152,20 +186,20 @@ export default function ResumenPage() {
           </div>
 
           {/* Chart */}
-          <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
-            <h2 className="text-lg font-semibold text-white mb-6">Balance Mensual</h2>
+          <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
+            <h2 className="text-lg font-semibold text-[#0a2a66] mb-6">Balance Mensual</h2>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
                 <AreaChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
-                  <YAxis stroke="#94a3b8" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d7e4ff" />
+                  <XAxis dataKey="name" stroke="#5a6f99" fontSize={12} />
+                  <YAxis stroke="#5a6f99" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#1e293b",
-                      border: "1px solid #334155",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #d7e4ff",
                       borderRadius: "8px",
-                      color: "#f1f5f9",
+                      color: "#0a2a66",
                     }}
                   />
                   <defs>
@@ -190,3 +224,5 @@ export default function ResumenPage() {
     </div>
   );
 }
+
+

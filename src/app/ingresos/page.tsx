@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -39,16 +39,22 @@ export default function IngresosPage() {
 
   const fetchData = useCallback(() => {
     fetch(`/api/ingresos?anio=${anio}&mes=${mes}`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+      })
       .then(setIngresos)
-      .catch(() => {});
+      .catch(() => setIngresos([]));
 
     const prevMes = mes === 1 ? 12 : mes - 1;
     const prevAnio = mes === 1 ? anio - 1 : anio;
     fetch(`/api/ingresos?anio=${prevAnio}&mes=${prevMes}`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+      })
       .then(setIngresosPrev)
-      .catch(() => {});
+      .catch(() => setIngresosPrev([]));
   }, [anio, mes]);
 
   useEffect(() => {
@@ -91,7 +97,7 @@ export default function IngresosPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("¿Eliminar este ingreso?")) return;
+    if (!confirm("Â¿Eliminar este ingreso?")) return;
     await fetch("/api/ingresos", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -102,7 +108,7 @@ export default function IngresosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -113,18 +119,18 @@ export default function IngresosPage() {
   const diff = totalPrev > 0 ? ((total - totalPrev) / totalPrev * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#f4f8ff]">
       <Sidebar />
-      <main className="lg:ml-64 p-6 lg:p-8">
+      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Ingresos</h1>
-              <p className="text-[#94a3b8]">Ingresos mensuales por categoría</p>
+              <h1 className="text-2xl font-bold text-[#0a2a66]">Ingresos</h1>
+              <p className="text-[#5a6f99]">Ingresos mensuales por categorÃ­a</p>
             </div>
             <button
               onClick={openAdd}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0f9b62] hover:bg-[#0b7f50] text-white font-medium transition-colors"
             >
               <Plus size={18} /> Agregar
             </button>
@@ -134,10 +140,10 @@ export default function IngresosPage() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <MonthSelector mes={mes} anio={anio} onChange={(m, a) => { setMes(m); setAnio(a); }} />
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] px-6 py-4">
+            <div className="bg-white rounded-xl border border-[#d7e4ff] px-6 py-4">
               <div className="flex items-center gap-4">
                 <div>
-                  <p className="text-sm text-[#94a3b8]">Total del Mes</p>
+                  <p className="text-sm text-[#5a6f99]">Total del Mes</p>
                   <p className="text-xl font-bold text-green-400">{formatMonto(total)}</p>
                 </div>
                 {diff !== 0 && (
@@ -151,26 +157,26 @@ export default function IngresosPage() {
           </div>
 
           {/* Income table */}
-          <div className="bg-[#1e293b] rounded-xl border border-[#334155] overflow-hidden">
+          <div className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-[#334155]">
-                    <th className="px-6 py-4 text-left text-sm font-medium text-[#94a3b8]">Categoría</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#94a3b8]">Monto</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#94a3b8]">Acciones</th>
+                  <tr className="border-b border-[#d7e4ff]">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#5a6f99]">CategorÃ­a</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Monto</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#334155]">
+                <tbody className="divide-y divide-[#e5edff]">
                   {CATEGORIAS_INGRESO.map((cat) => {
                     const item = ingresos.find((i) => i.categoria === cat);
                     return (
-                      <tr key={cat} className="hover:bg-[#334155]/30 transition-colors">
+                      <tr key={cat} className="hover:bg-[#eef4ff]/30 transition-colors">
                         <td className="px-6 py-4">
-                          <span className="font-medium text-white">{cat}</span>
+                          <span className="font-medium text-[#0a2a66]">{cat}</span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={`font-medium ${item ? "text-green-400" : "text-[#64748b]"}`}>
+                          <span className={`font-medium ${item ? "text-green-400" : "text-[#7a8fb8]"}`}>
                             {item ? formatMonto(Number(item.monto)) : "-"}
                           </span>
                         </td>
@@ -178,10 +184,10 @@ export default function IngresosPage() {
                           <div className="flex items-center justify-end gap-2">
                             {item ? (
                               <>
-                                <button onClick={() => openEdit(item)} className="text-[#64748b] hover:text-blue-400 transition-colors">
+                                <button onClick={() => openEdit(item)} className="text-[#7a8fb8] hover:text-blue-400 transition-colors">
                                   <Pencil size={16} />
                                 </button>
-                                <button onClick={() => handleDelete(item.id)} className="text-[#64748b] hover:text-red-400 transition-colors">
+                                <button onClick={() => handleDelete(item.id)} className="text-[#7a8fb8] hover:text-red-400 transition-colors">
                                   <Trash2 size={16} />
                                 </button>
                               </>
@@ -193,7 +199,7 @@ export default function IngresosPage() {
                                   setFormMonto("");
                                   setModalOpen(true);
                                 }}
-                                className="text-[#64748b] hover:text-green-400 transition-colors"
+                                className="text-[#7a8fb8] hover:text-green-400 transition-colors"
                               >
                                 <Plus size={16} />
                               </button>
@@ -205,8 +211,8 @@ export default function IngresosPage() {
                   })}
                 </tbody>
                 <tfoot>
-                  <tr className="border-t-2 border-[#475569]">
-                    <td className="px-6 py-4 font-bold text-white">TOTAL</td>
+                  <tr className="border-t-2 border-[#c9dbff]">
+                    <td className="px-6 py-4 font-bold text-[#0a2a66]">TOTAL</td>
                     <td className="px-6 py-4 text-right font-bold text-green-400">{formatMonto(total)}</td>
                     <td></td>
                   </tr>
@@ -219,11 +225,11 @@ export default function IngresosPage() {
           <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar Ingreso" : "Agregar Ingreso"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Categoría</label>
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">CategorÃ­a</label>
                 <select
                   value={formCat}
                   onChange={(e) => setFormCat(e.target.value)}
-                  className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]"
                 >
                   {CATEGORIAS_INGRESO.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -231,18 +237,18 @@ export default function IngresosPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#94a3b8] mb-1">Monto</label>
+                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Monto</label>
                 <input
                   type="number"
                   value={formMonto}
                   onChange={(e) => setFormMonto(e.target.value)}
                   placeholder="0.00"
-                  className="w-full bg-[#334155] border border-[#475569] rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]"
                 />
               </div>
               <button
                 onClick={handleSave}
-                className="w-full py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition-colors"
+                className="w-full py-2 rounded-lg bg-[#0f9b62] hover:bg-[#0b7f50] text-white font-medium transition-colors"
               >
                 {editItem ? "Actualizar" : "Guardar"}
               </button>
@@ -253,3 +259,5 @@ export default function IngresosPage() {
     </div>
   );
 }
+
+

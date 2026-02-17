@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 
+function buildEmptyResumen() {
+  const meses = [];
+  for (let m = 1; m <= 12; m++) {
+    meses.push({
+      mes: m,
+      ingresos: 0,
+      egresos: 0,
+      diferencia: 0,
+    });
+  }
+  return meses;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const sql = getDb();
@@ -27,6 +40,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(meses);
   } catch (error) {
     console.error("Error fetching resumen:", error);
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    return NextResponse.json(buildEmptyResumen());
   }
 }

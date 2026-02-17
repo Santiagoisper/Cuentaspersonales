@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -33,17 +33,31 @@ interface ResumenMes {
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [resumen, setResumen] = useState<ResumenMes[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [cotizacion, setCotizacion] = useState(1000);
   const [moneda, setMoneda] = useState("ARS");
 
   useEffect(() => {
     fetch(`/api/resumen?anio=${new Date().getFullYear()}`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) {
+          throw new Error(data?.error || "No se pudo cargar el resumen.");
+        }
+        if (!Array.isArray(data)) {
+          throw new Error("Respuesta invalida del resumen.");
+        }
+        return data as ResumenMes[];
+      })
       .then((data) => {
         setResumen(data);
-        setLoading(false);
+        setError(null);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        setResumen([]);
+        setError(err instanceof Error ? err.message : "Error al cargar datos.");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const formatMonto = (val: number) => {
@@ -54,8 +68,24 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#f4f8ff]">
+        <Sidebar />
+        <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white border border-red-500/30 rounded-xl p-6">
+              <h1 className="text-xl font-bold text-[#0a2a66] mb-2">Error al cargar el dashboard</h1>
+              <p className="text-red-300">{error}</p>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -78,15 +108,15 @@ export default function DashboardPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#f4f8ff]">
       <Sidebar />
-      <main className="lg:ml-64 p-6 lg:p-8">
+      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-              <p className="text-[#94a3b8]">Resumen de tus finanzas</p>
+              <h1 className="text-2xl font-bold text-[#0a2a66]">Dashboard</h1>
+              <p className="text-[#5a6f99]">Resumen de tus finanzas</p>
             </div>
           </div>
 
@@ -99,7 +129,7 @@ export default function DashboardPage() {
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Ingresos del Mes */}
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-green-500/20 rounded-lg">
                   <TrendingUp className="text-green-400" size={20} />
@@ -111,12 +141,12 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-              <p className="text-[#94a3b8] text-sm">Ingresos del Mes</p>
-              <p className="text-2xl font-bold text-white mt-1">{formatMonto(ingMesActual)}</p>
+              <p className="text-[#5a6f99] text-sm">Ingresos del Mes</p>
+              <p className="text-2xl font-bold text-[#0a2a66] mt-1">{formatMonto(ingMesActual)}</p>
             </div>
 
             {/* Egresos del Mes */}
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-red-500/20 rounded-lg">
                   <TrendingDown className="text-red-400" size={20} />
@@ -128,18 +158,18 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-              <p className="text-[#94a3b8] text-sm">Egresos del Mes</p>
-              <p className="text-2xl font-bold text-white mt-1">{formatMonto(egrMesActual)}</p>
+              <p className="text-[#5a6f99] text-sm">Egresos del Mes</p>
+              <p className="text-2xl font-bold text-[#0a2a66] mt-1">{formatMonto(egrMesActual)}</p>
             </div>
 
             {/* Balance */}
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-blue-500/20 rounded-lg">
                   <Wallet className="text-blue-400" size={20} />
                 </div>
               </div>
-              <p className="text-[#94a3b8] text-sm">Balance del Mes</p>
+              <p className="text-[#5a6f99] text-sm">Balance del Mes</p>
               <p className={`text-2xl font-bold mt-1 ${ingMesActual - egrMesActual >= 0 ? "text-green-400" : "text-red-400"}`}>
                 {formatMonto(ingMesActual - egrMesActual)}
               </p>
@@ -148,31 +178,31 @@ export default function DashboardPage() {
 
           {/* Totals Year */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
-              <p className="text-[#94a3b8] text-sm mb-1">Total Ingresos {new Date().getFullYear()}</p>
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
+              <p className="text-[#5a6f99] text-sm mb-1">Total Ingresos {new Date().getFullYear()}</p>
               <p className="text-xl font-bold text-green-400">{formatMonto(totalIngresosAnio)}</p>
             </div>
-            <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
-              <p className="text-[#94a3b8] text-sm mb-1">Total Egresos {new Date().getFullYear()}</p>
+            <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
+              <p className="text-[#5a6f99] text-sm mb-1">Total Egresos {new Date().getFullYear()}</p>
               <p className="text-xl font-bold text-red-400">{formatMonto(totalEgresosAnio)}</p>
             </div>
           </div>
 
           {/* Chart */}
-          <div className="bg-[#1e293b] rounded-xl border border-[#334155] p-6">
-            <h2 className="text-lg font-semibold text-white mb-6">Ingresos vs Egresos por Mes</h2>
+          <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
+            <h2 className="text-lg font-semibold text-[#0a2a66] mb-6">Ingresos vs Egresos por Mes</h2>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                 <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
-                  <YAxis stroke="#94a3b8" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d7e4ff" />
+                  <XAxis dataKey="name" stroke="#5a6f99" fontSize={12} />
+                  <YAxis stroke="#5a6f99" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#1e293b",
-                      border: "1px solid #334155",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #d7e4ff",
                       borderRadius: "8px",
-                      color: "#f1f5f9",
+                      color: "#0a2a66",
                     }}
                   />
                   <Legend />
@@ -187,3 +217,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+
