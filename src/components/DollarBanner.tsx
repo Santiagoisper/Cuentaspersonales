@@ -1,7 +1,7 @@
 "use client";
 
 import { DollarSign, ArrowRightLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface DollarBannerProps {
   onCotizacionChange?: (cotizacion: number) => void;
@@ -13,30 +13,45 @@ export default function DollarBanner({ onCotizacionChange, onMonedaChange }: Dol
   const [moneda, setMoneda] = useState<string>("ARS");
   const [editing, setEditing] = useState(false);
   const [tempVal, setTempVal] = useState("");
+  const onCotizacionChangeRef = useRef(onCotizacionChange);
+  const onMonedaChangeRef = useRef(onMonedaChange);
 
   useEffect(() => {
+    onCotizacionChangeRef.current = onCotizacionChange;
+  }, [onCotizacionChange]);
+
+  useEffect(() => {
+    onMonedaChangeRef.current = onMonedaChange;
+  }, [onMonedaChange]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
     const fetchConfig = async () => {
       try {
-        const configResponse = await fetch("/api/config");
+        const configResponse = await fetch("/api/config", { signal: controller.signal });
+        if (!configResponse.ok) return;
         const configData = await configResponse.json();
 
         if (configData.cotizacion_dolar) {
           const val = Number(configData.cotizacion_dolar) || 1000;
           setCotizacion(val);
-          onCotizacionChange?.(val);
+          onCotizacionChangeRef.current?.(val);
         }
 
         if (configData.moneda_display) {
           setMoneda(configData.moneda_display);
-          onMonedaChange?.(configData.moneda_display);
+          onMonedaChangeRef.current?.(configData.moneda_display);
         }
       } catch (error) {
+        if (controller.signal.aborted) return;
         console.error("Error fetching cotizacion:", error);
       }
     };
 
     fetchConfig();
-  }, [onCotizacionChange, onMonedaChange]);
+    return () => controller.abort();
+  }, []);
 
   const saveCotizacion = async () => {
     const val = Number(tempVal);
