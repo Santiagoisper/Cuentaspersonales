@@ -11,6 +11,14 @@ async function runGit(args: string[]) {
   return execFileAsync("git", args, { cwd: process.cwd() });
 }
 
+async function tryRunGit(args: string[]) {
+  try {
+    await runGit(args);
+  } catch {
+    // Ignore optional cleanup failures.
+  }
+}
+
 function sanitizeCommitMessage(value: unknown): string {
   const raw = String(value || "").replace(/[\r\n]+/g, " ").trim();
   if (!raw) return `Update all changes ${new Date().toISOString()}`;
@@ -29,6 +37,7 @@ export async function POST(request: NextRequest) {
     const commitMessage = sanitizeCommitMessage(body?.message);
 
     await runGit(["add", "-A"]);
+    await tryRunGit(["reset", "HEAD", "--", ".dev.log", ".dev.out.log", ".dev.err.log"]);
 
     let committed = true;
     try {
