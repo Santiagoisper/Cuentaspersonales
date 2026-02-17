@@ -25,13 +25,19 @@ const COLORS = ["#3b82f6", "#a855f7", "#22c55e", "#eab308", "#ef4444", "#06b6d4"
 
 export default function DolaresPage() {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [dolares, setDolares] = useState<Dolar[]>([]);
   const [cotizacion, setCotizacion] = useState(1000);
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<Dolar | null>(null);
   const [fUbicacion, setFUbicacion] = useState("");
+  const [fNuevaUbicacion, setFNuevaUbicacion] = useState("");
   const [fDetalle, setFDetalle] = useState("");
   const [fMonto, setFMonto] = useState("");
+
+  const ubicacionesDisponibles = Array.from(
+    new Set([...UBICACIONES, ...dolares.map((d) => d.ubicacion)])
+  );
 
   const fetchData = useCallback(() => {
     fetch("/api/dolares")
@@ -49,7 +55,8 @@ export default function DolaresPage() {
 
   const openAdd = () => {
     setEditItem(null);
-    setFUbicacion(UBICACIONES[0]);
+    setFUbicacion(ubicacionesDisponibles[0] || "");
+    setFNuevaUbicacion("");
     setFDetalle("");
     setFMonto("");
     setModalOpen(true);
@@ -58,23 +65,37 @@ export default function DolaresPage() {
   const openEdit = (item: Dolar) => {
     setEditItem(item);
     setFUbicacion(item.ubicacion);
+    setFNuevaUbicacion("");
     setFDetalle(item.detalle || "");
     setFMonto(String(item.monto));
     setModalOpen(true);
   };
 
   const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
     const method = editItem ? "PUT" : "POST";
     const body = editItem
       ? { id: editItem.id, ubicacion: fUbicacion, detalle: fDetalle, monto: Number(fMonto) || 0 }
       : { ubicacion: fUbicacion, detalle: fDetalle, monto: Number(fMonto) || 0 };
-    await fetch("/api/dolares", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    setModalOpen(false);
-    fetchData();
+    try {
+      await fetch("/api/dolares", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      fetchData();
+      setModalOpen(false);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddUbicacion = () => {
+    const nueva = fNuevaUbicacion.trim().toUpperCase();
+    if (!nueva) return;
+    setFUbicacion(nueva);
+    setFNuevaUbicacion("");
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Â¿Eliminar este registro?")) return;
+    if (!confirm("Eliminar este registro?")) return;
     await fetch("/api/dolares", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -109,8 +130,8 @@ export default function DolaresPage() {
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-[#0d2a5f]">DÃ³lares</h1>
-              <p className="text-[#5f769d]">Tenencias en dÃ³lares por ubicaciÃ³n</p>
+              <h1 className="text-2xl font-bold text-[#0d2a5f]">Dolares</h1>
+              <p className="text-[#5f769d]">Tenencias en dolares por ubicacion</p>
             </div>
             <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white font-medium transition-colors">
               <Plus size={18} /> Agregar
@@ -126,7 +147,7 @@ export default function DolaresPage() {
                 <DollarSign className="text-[#1652c4]" size={28} />
               </div>
               <div>
-                <p className="text-sm text-[#5f769d]">Total en DÃ³lares</p>
+                <p className="text-sm text-[#5f769d]">Total en Dolares</p>
                 <p className="text-3xl font-bold text-[#1652c4]">U$S {totalUSD.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</p>
                 <p className="text-sm text-[#5f769d] mt-1">
                   Equivalente: $ {totalARS.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
@@ -139,7 +160,7 @@ export default function DolaresPage() {
             {/* Pie Chart */}
             {pieData.length > 0 && (
               <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
-                <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">DistribuciÃ³n</h2>
+                <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Distribucion</h2>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                     <PieChart>
@@ -181,7 +202,7 @@ export default function DolaresPage() {
 
             {/* Cards by ubicacion */}
             <div className="space-y-4">
-              {UBICACIONES.map((ubi) => {
+              {ubicacionesDisponibles.map((ubi) => {
                 const items = grouped[ubi] || [];
                 const total = items.reduce((s, d) => s + Number(d.monto), 0);
                 const Icon = UBICACION_ICONS[ubi] || DollarSign;
@@ -218,17 +239,35 @@ export default function DolaresPage() {
           </div>
 
           {/* Modal */}
-          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar DÃ³lares" : "Agregar DÃ³lares"}>
+          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar dolares" : "Agregar dolares"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">UbicaciÃ³n</label>
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Ubicacion</label>
                 <select value={fUbicacion} onChange={(e) => setFUbicacion(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
-                  {UBICACIONES.map((u) => <option key={u} value={u}>{u}</option>)}
+                  {ubicacionesDisponibles.map((u) => <option key={u} value={u}>{u}</option>)}
                 </select>
+                {!editItem && (
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      type="text"
+                      value={fNuevaUbicacion}
+                      onChange={(e) => setFNuevaUbicacion(e.target.value)}
+                      placeholder="Nueva ubicacion..."
+                      className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddUbicacion}
+                      className="px-3 py-2 rounded-lg bg-[#0f3c92] hover:bg-[#0a2a66] text-white text-sm font-medium transition-colors"
+                    >
+                      Crear
+                    </button>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">
-                  Detalle {fUbicacion === "PRESTADO" && "(Â¿A quiÃ©n?)"}
+                  Detalle {fUbicacion === "PRESTADO" && "(A quien?)"}
                 </label>
                 <input type="text" value={fDetalle} onChange={(e) => setFDetalle(e.target.value)} placeholder={fUbicacion === "PRESTADO" ? "Nombre de la persona..." : "Detalle opcional..."} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
@@ -236,9 +275,11 @@ export default function DolaresPage() {
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto (USD)</label>
                 <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
-              <button onClick={handleSave} className="w-full py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white font-medium transition-colors">
-                {editItem ? "Actualizar" : "Guardar"}
-              </button>
+              <div>
+                <button onClick={handleSave} disabled={saving} className="w-full py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
+                  {editItem ? "Actualizar" : "Guardar"}
+                </button>
+              </div>
             </div>
           </Modal>
         </div>

@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
 import DollarBanner from "@/components/DollarBanner";
 import {
@@ -30,15 +30,66 @@ interface ResumenMes {
   diferencia: number;
 }
 
+interface PatrimonioResponse {
+  breakdown: {
+    activos_ars: number;
+    inversiones_cocos_sin_cauciones_ars: number;
+    ultima_caucion_ars: number;
+    ultima_caucion_fecha: string | null;
+    dolares_usd: number;
+    cotizacion_dolar: number;
+    dolares_ars: number;
+    total_ars: number;
+  } | null;
+  comparacion: {
+    variacion_ars: number;
+    variacion_pct: number | null;
+    tiene_dato_ayer: boolean;
+  } | null;
+  metricas: {
+    ahorro_mensual_pct: number | null;
+    runway_meses: number | null;
+    ingresos_mes_actual_ars: number;
+    egresos_mes_actual_ars: number;
+    egreso_promedio_3m_ars: number;
+    score_financiero_100: number;
+  } | null;
+  concentracion: {
+    activos_e_inversiones_entidades_pct: number;
+    cocos_sin_cauciones_pct: number;
+    ultima_caucion_pct: number;
+    dolares_pct: number;
+  } | null;
+}
+
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [resumen, setResumen] = useState<ResumenMes[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [cotizacion, setCotizacion] = useState(1000);
   const [moneda, setMoneda] = useState("ARS");
+  const [patrimonioData, setPatrimonioData] = useState<PatrimonioResponse | null>(null);
+  const [patrimonioError, setPatrimonioError] = useState<string | null>(null);
   const [updatingLocal, setUpdatingLocal] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
+
+  const loadPatrimonio = useCallback(() => {
+    return fetch("/api/patrimonio")
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data?.error || "No se pudo cargar patrimonio.");
+        return data as PatrimonioResponse;
+      })
+      .then((data) => {
+        setPatrimonioData(data);
+        setPatrimonioError(null);
+      })
+      .catch(() => {
+        setPatrimonioData(null);
+        setPatrimonioError("No se pudo cargar el patrimonio consolidado.");
+      });
+  }, []);
 
   useEffect(() => {
     fetch(`/api/resumen?anio=${new Date().getFullYear()}`)
@@ -61,7 +112,9 @@ export default function DashboardPage() {
         setError(err instanceof Error ? err.message : "Error al cargar datos.");
       })
       .finally(() => setLoading(false));
-  }, []);
+
+    loadPatrimonio();
+  }, [loadPatrimonio]);
 
   const formatMonto = (val: number) => {
     const display = moneda === "USD" ? val / cotizacion : val;
@@ -112,6 +165,24 @@ export default function DashboardPage() {
     Ingresos: moneda === "USD" ? Math.round(r.ingresos / cotizacion) : r.ingresos,
     Egresos: moneda === "USD" ? Math.round(r.egresos / cotizacion) : r.egresos,
   }));
+  const patrimonioTotalPesos = Number(patrimonioData?.breakdown?.total_ars || 0);
+  const ahorroMensualPct = patrimonioData?.metricas?.ahorro_mensual_pct ?? null;
+  const runwayMeses = patrimonioData?.metricas?.runway_meses ?? null;
+  const scoreFinanciero = patrimonioData?.metricas?.score_financiero_100 ?? null;
+
+  const getScoreColor = (score: number | null) => {
+    if (score === null) return "text-[#0d2a5f]";
+    if (score < 40) return "text-[#cf2f61]";
+    if (score < 70) return "text-[#c68900]";
+    return "text-[#12945f]";
+  };
+
+  const getAhorroColor = (pct: number | null) => {
+    if (pct === null) return "text-[#0d2a5f]";
+    if (pct < 10) return "text-[#cf2f61]";
+    if (pct < 25) return "text-[#c68900]";
+    return "text-[#12945f]";
+  };
 
   const handleUpdateLocal = async () => {
     const ok = window.confirm("Va a traer codigo de git y luego datos de produccion a tu localhost. Continuar?");
@@ -206,7 +277,89 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          <DollarBanner onCotizacionChange={setCotizacion} onMonedaChange={setMoneda} />
+          <DollarBanner
+            onCotizacionChange={(value) => {
+              setCotizacion(value);
+              loadPatrimonio();
+            }}
+            onMonedaChange={setMoneda}
+          />
+
+          <div className="rounded-2xl border border-[#d6e2f4] bg-gradient-to-r from-[#eaf1ff] to-[#ffffff] p-6 shadow-[0_12px_28px_rgba(23,66,133,0.09)]">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-[#6078a0]">Total Patrimonio (ARS)</p>
+                <p className="mt-2 text-3xl font-bold text-[#0d2a5f]">
+                  $ {patrimonioTotalPesos.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </p>
+                <p className="mt-1 text-xs text-[#6e84aa]">
+                  Activos e inversiones + Cocos (ultima caucion) + dolares convertidos.
+                </p>
+              </div>
+              {patrimonioData?.comparacion?.tiene_dato_ayer && (
+                <div className={`rounded-xl px-3 py-2 text-sm font-semibold ${Number(patrimonioData.comparacion.variacion_ars) >= 0 ? "bg-green-500/10 text-[#12945f]" : "bg-red-500/10 text-[#cf2f61]"}`}>
+                  {Number(patrimonioData.comparacion.variacion_ars) >= 0 ? "+" : ""}
+                  {formatMonto(Number(patrimonioData.comparacion.variacion_ars))} vs ayer
+                </div>
+              )}
+            </div>
+            {patrimonioError && <p className="mt-3 text-xs text-[#b42355]">{patrimonioError}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Ahorro mensual</p>
+              <p className={`mt-2 text-2xl font-bold ${getAhorroColor(ahorroMensualPct)}`}>
+                {ahorroMensualPct === null ? "-" : `${ahorroMensualPct.toFixed(1)}%`}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Runway</p>
+              <p className="mt-2 text-2xl font-bold text-[#0d2a5f]">
+                {runwayMeses === null ? "-" : `${runwayMeses.toFixed(1)} meses`}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Concentracion USD</p>
+              <p className="mt-2 text-2xl font-bold text-[#1652c4]">
+                {patrimonioData?.concentracion ? `${patrimonioData.concentracion.dolares_pct.toFixed(1)}%` : "-"}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Concentracion caucion</p>
+              <p className="mt-2 text-2xl font-bold text-[#5f63d6]">
+                {patrimonioData?.concentracion ? `${patrimonioData.concentracion.ultima_caucion_pct.toFixed(1)}%` : "-"}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Score financiero</p>
+              <p className={`mt-2 text-2xl font-bold ${getScoreColor(scoreFinanciero)}`}>
+                {scoreFinanciero === null ? "-" : `${scoreFinanciero.toFixed(0)}/100`}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Activos + inv. entidades</p>
+              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.activos_ars || 0))}</p>
+            </div>
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Cocos sin cauciones</p>
+              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.inversiones_cocos_sin_cauciones_ars || 0))}</p>
+            </div>
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Ultima caucion</p>
+              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.ultima_caucion_ars || 0))}</p>
+            </div>
+            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Dolares en ARS</p>
+              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.dolares_ars || 0))}</p>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <div className="rounded-2xl border border-[#d5e8dc] bg-white p-6 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">

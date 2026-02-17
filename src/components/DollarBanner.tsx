@@ -15,19 +15,16 @@ export default function DollarBanner({ onCotizacionChange, onMonedaChange }: Dol
   const [tempVal, setTempVal] = useState("");
 
   useEffect(() => {
-    const fetchCotizacion = async () => {
+    const fetchConfig = async () => {
       try {
-        const cotizacionResponse = await fetch("/api/cotizacion-dolar");
-        const cotizacionData = await cotizacionResponse.json();
+        const configResponse = await fetch("/api/config");
+        const configData = await configResponse.json();
 
-        if (cotizacionData.cotizacion) {
-          const val = cotizacionData.cotizacion;
+        if (configData.cotizacion_dolar) {
+          const val = Number(configData.cotizacion_dolar) || 1000;
           setCotizacion(val);
           onCotizacionChange?.(val);
         }
-
-        const configResponse = await fetch("/api/config");
-        const configData = await configResponse.json();
 
         if (configData.moneda_display) {
           setMoneda(configData.moneda_display);
@@ -38,9 +35,7 @@ export default function DollarBanner({ onCotizacionChange, onMonedaChange }: Dol
       }
     };
 
-    fetchCotizacion();
-    const interval = setInterval(fetchCotizacion, 3600000);
-    return () => clearInterval(interval);
+    fetchConfig();
   }, [onCotizacionChange, onMonedaChange]);
 
   const saveCotizacion = async () => {

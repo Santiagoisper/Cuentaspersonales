@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { syncPatrimonioHistorial } from "@/lib/patrimonio";
 
 export async function GET() {
   try {
@@ -24,6 +25,9 @@ export async function PUT(request: NextRequest) {
     const sql = getDb();
     const { key, value } = await request.json();
     await sql`INSERT INTO config (key, value, updated_at) VALUES (${key}, ${value}, NOW()) ON CONFLICT (key) DO UPDATE SET value = ${value}, updated_at = NOW()`;
+    if (key === "cotizacion_dolar") {
+      await syncPatrimonioHistorial(sql);
+    }
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating config:", error);
