@@ -178,7 +178,7 @@ export default function EgresosPage() {
     <div className="min-h-screen bg-[#f5f9ff]">
       <Sidebar />
 
-      <main className="pt-[69px]">
+      <main className="md:pr-[18rem]">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6 md:px-10 py-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -273,7 +273,7 @@ export default function EgresosPage() {
 
       <button
         onClick={openAdd}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[#1652c4] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(22,82,196,0.38)] transition-colors hover:bg-[#0f3c92]"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[#1652c4] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(22,82,196,0.38)] transition-colors hover:bg-[#0f3c92] md:right-[18.5rem]"
       >
         <Plus size={16} />
         Agregar egreso
@@ -385,3 +385,4 @@ export default function EgresosPage() {
     </div>
   );
 }
+

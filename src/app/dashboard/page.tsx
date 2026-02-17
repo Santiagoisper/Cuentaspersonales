@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -37,6 +37,7 @@ export default function DashboardPage() {
   const [cotizacion, setCotizacion] = useState(1000);
   const [moneda, setMoneda] = useState("ARS");
   const [gitLoading, setGitLoading] = useState(false);
+  const [gitPullLoading, setGitPullLoading] = useState(false);
   const [gitStatus, setGitStatus] = useState<string | null>(null);
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-[#f5f9ff]">
         <Sidebar />
-        <main className="px-5 pb-8 pt-24 md:px-10">
+        <main className="px-5 pb-8 md:px-10 md:pr-[18rem]">
           <div className="mx-auto max-w-7xl">
             <div className="rounded-2xl border border-[#f1c0cf] bg-white p-6 shadow-[0_16px_34px_rgba(40,72,130,0.09)]">
               <h1 className="mb-2 text-xl font-bold text-[#0d2a5f]">Error al cargar el dashboard</h1>
@@ -131,10 +132,29 @@ export default function DashboardPage() {
     }
   };
 
+  const handleGitPull = async () => {
+    setGitPullLoading(true);
+    setGitStatus(null);
+    try {
+      const res = await fetch("/api/git/pull", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.details || data?.error || "Error al hacer pull");
+      setGitStatus(`${data?.message || "Pull listo"} (${data?.branch || "main"})`);
+    } catch (err) {
+      setGitStatus(err instanceof Error ? err.message : "Error al hacer pull");
+    } finally {
+      setGitPullLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f5f9ff]">
       <Sidebar />
-      <main className="px-5 pb-8 pt-24 md:px-10">
+      <main className="px-5 pb-8 md:px-10 md:pr-[18rem]">
         <div className="mx-auto max-w-7xl space-y-7">
           <section className="relative overflow-hidden rounded-[28px] border border-[#d5e1f4] bg-gradient-to-r from-[#0d2a5f] to-[#1757ca] px-6 py-7 text-white shadow-[0_24px_50px_rgba(18,58,130,0.35)] md:px-9">
             <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
@@ -144,10 +164,17 @@ export default function DashboardPage() {
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
               <button
                 onClick={handleGitPush}
-                disabled={gitLoading}
+                disabled={gitLoading || gitPullLoading}
                 className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {gitLoading ? "Subiendo..." : "Subir al git"}
+              </button>
+              <button
+                onClick={handleGitPull}
+                disabled={gitLoading || gitPullLoading}
+                className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {gitPullLoading ? "Actualizando..." : "Pull"}
               </button>
               {gitStatus && <p className="text-xs text-blue-100">{gitStatus}</p>}
             </div>
@@ -240,3 +267,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

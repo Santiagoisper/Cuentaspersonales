@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -127,7 +127,7 @@ export default function ActivosPage() {
   };
 
   const deleteActivo = async (id: number) => {
-    if (!confirm("¿Eliminar este activo?")) return;
+    if (!confirm("Â¿Eliminar este activo?")) return;
     await fetch("/api/activos", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -160,7 +160,7 @@ export default function ActivosPage() {
   };
 
   const deleteInv = async (id: number) => {
-    if (!confirm("¿Eliminar esta inversión?")) return;
+    if (!confirm("Â¿Eliminar esta inversiÃ³n?")) return;
     await fetch("/api/inversiones", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -193,7 +193,7 @@ export default function ActivosPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
       <Sidebar />
-      <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
+      <main className="p-5 md:p-10 md:pr-[18rem]">
         <div className="max-w-6xl mx-auto space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-[#0d2a5f]">Activos & Inversiones</h1>
@@ -221,7 +221,7 @@ export default function ActivosPage() {
           {/* Historical chart */}
           {chartData.length > 1 && (
             <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
-              <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Evolución del Patrimonio</h2>
+              <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">EvoluciÃ³n del Patrimonio</h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                   <LineChart data={chartData}>
@@ -359,7 +359,7 @@ export default function ActivosPage() {
           </div>
 
           {/* Modal Activo */}
-          <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/Inversión"}>
+          <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/InversiÃ³n"}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Entidad</label>
@@ -370,11 +370,11 @@ export default function ActivosPage() {
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
                 <select value={fTipo} onChange={(e) => setFTipo(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
-                  {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "Inversión"}</option>)}
+                  {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "InversiÃ³n"}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">DescripciÃ³n</label>
                 <input type="text" value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ej: Caja de Ahorro, FIMA..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <div>
@@ -388,7 +388,7 @@ export default function ActivosPage() {
           </Modal>
 
           {/* Modal Inversion Cocos */}
-          <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar Inversión Cocos" : "Agregar Inversión Cocos"}>
+          <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar InversiÃ³n Cocos" : "Agregar InversiÃ³n Cocos"}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
@@ -397,8 +397,8 @@ export default function ActivosPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
-                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="Descripción..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">DescripciÃ³n</label>
+                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="DescripciÃ³n..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto</label>
@@ -414,6 +414,7 @@ export default function ActivosPage() {
     </div>
   );
 }
+
 
 
 

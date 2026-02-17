@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -89,7 +89,7 @@ export default function IngresosPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("¿Eliminar este ingreso?")) return;
+    if (!confirm("Eliminar este ingreso?")) return;
     await fetch("/api/ingresos", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ export default function IngresosPage() {
     <div className="min-h-screen bg-[#f5f9ff]">
       <Sidebar />
 
-      <main className="pt-[69px]">
+      <main className="md:pr-[18rem]">
         {/* Page header */}
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6 md:px-10 py-8">
@@ -155,7 +155,7 @@ export default function IngresosPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-widest">Categoría</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-widest">Categoria</th>
                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-widest">Monto</th>
                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-widest">Acciones</th>
                   </tr>
@@ -170,7 +170,7 @@ export default function IngresosPage() {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <span className={`text-sm font-semibold ${item ? "text-green-700" : "text-gray-400"}`}>
-                            {item ? formatMonto(Number(item.monto)) : "—"}
+                            {item ? formatMonto(Number(item.monto)) : "-"}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
@@ -213,7 +213,7 @@ export default function IngresosPage() {
 
       <button
         onClick={openAdd}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[#1652c4] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(22,82,196,0.38)] transition-colors hover:bg-[#0f3c92]"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[#1652c4] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(22,82,196,0.38)] transition-colors hover:bg-[#0f3c92] md:right-[18.5rem]"
       >
         <Plus size={16} />
         Agregar ingreso
@@ -222,7 +222,7 @@ export default function IngresosPage() {
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar Ingreso" : "Nuevo Ingreso"}>
         <div className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Categoría</label>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Categoria</label>
             <select
               value={formCat}
               onChange={(e) => setFormCat(e.target.value)}
@@ -252,4 +252,5 @@ export default function IngresosPage() {
     </div>
   );
 }
+
 

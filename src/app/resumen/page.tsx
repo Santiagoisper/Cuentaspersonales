@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -76,7 +76,7 @@ export default function ResumenPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
         <Sidebar />
-        <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
+        <main className="p-5 md:p-10 md:pr-[18rem]">
           <div className="max-w-6xl mx-auto">
             <div className="bg-white border border-red-500/30 rounded-xl p-6">
               <h1 className="text-xl font-bold text-[#0d2a5f] mb-2">Error al cargar el resumen</h1>
@@ -100,7 +100,7 @@ export default function ResumenPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
       <Sidebar />
-      <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
+      <main className="p-5 md:p-10 md:pr-[18rem]">
         <div className="max-w-6xl mx-auto space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-[#0d2a5f]">Resumen General</h1>
@@ -224,6 +224,7 @@ export default function ResumenPage() {
     </div>
   );
 }
+
 
 
 

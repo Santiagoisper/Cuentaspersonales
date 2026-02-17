@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -74,7 +74,7 @@ export default function DolaresPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("¿Eliminar este registro?")) return;
+    if (!confirm("Â¿Eliminar este registro?")) return;
     await fetch("/api/dolares", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -105,12 +105,12 @@ export default function DolaresPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
       <Sidebar />
-      <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
+      <main className="p-5 md:p-10 md:pr-[18rem]">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-[#0d2a5f]">Dólares</h1>
-              <p className="text-[#5f769d]">Tenencias en dólares por ubicación</p>
+              <h1 className="text-2xl font-bold text-[#0d2a5f]">DÃ³lares</h1>
+              <p className="text-[#5f769d]">Tenencias en dÃ³lares por ubicaciÃ³n</p>
             </div>
             <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white font-medium transition-colors">
               <Plus size={18} /> Agregar
@@ -126,7 +126,7 @@ export default function DolaresPage() {
                 <DollarSign className="text-[#1652c4]" size={28} />
               </div>
               <div>
-                <p className="text-sm text-[#5f769d]">Total en Dólares</p>
+                <p className="text-sm text-[#5f769d]">Total en DÃ³lares</p>
                 <p className="text-3xl font-bold text-[#1652c4]">U$S {totalUSD.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</p>
                 <p className="text-sm text-[#5f769d] mt-1">
                   Equivalente: $ {totalARS.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
@@ -139,7 +139,7 @@ export default function DolaresPage() {
             {/* Pie Chart */}
             {pieData.length > 0 && (
               <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
-                <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Distribución</h2>
+                <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">DistribuciÃ³n</h2>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                     <PieChart>
@@ -218,17 +218,17 @@ export default function DolaresPage() {
           </div>
 
           {/* Modal */}
-          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar Dólares" : "Agregar Dólares"}>
+          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar DÃ³lares" : "Agregar DÃ³lares"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Ubicación</label>
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">UbicaciÃ³n</label>
                 <select value={fUbicacion} onChange={(e) => setFUbicacion(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
                   {UBICACIONES.map((u) => <option key={u} value={u}>{u}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">
-                  Detalle {fUbicacion === "PRESTADO" && "(¿A quién?)"}
+                  Detalle {fUbicacion === "PRESTADO" && "(Â¿A quiÃ©n?)"}
                 </label>
                 <input type="text" value={fDetalle} onChange={(e) => setFDetalle(e.target.value)} placeholder={fUbicacion === "PRESTADO" ? "Nombre de la persona..." : "Detalle opcional..."} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
@@ -246,6 +246,7 @@ export default function DolaresPage() {
     </div>
   );
 }
+
 
 
 
