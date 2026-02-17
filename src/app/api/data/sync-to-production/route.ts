@@ -6,6 +6,75 @@ export const runtime = "nodejs";
 
 type Row = Record<string, unknown>;
 
+async function ensureSchema(sql: any) {
+  await sql`CREATE TABLE IF NOT EXISTS config (
+    id SERIAL PRIMARY KEY,
+    key VARCHAR(100) UNIQUE NOT NULL,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW()
+  )`;
+
+  await sql`CREATE TABLE IF NOT EXISTS egresos (
+    id SERIAL PRIMARY KEY,
+    anio INT NOT NULL,
+    mes INT NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    subcategoria VARCHAR(100) NOT NULL,
+    monto DECIMAL(15,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(anio, mes, categoria, subcategoria)
+  )`;
+
+  await sql`CREATE TABLE IF NOT EXISTS ingresos (
+    id SERIAL PRIMARY KEY,
+    anio INT NOT NULL,
+    mes INT NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    monto DECIMAL(15,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(anio, mes, categoria)
+  )`;
+
+  await sql`CREATE TABLE IF NOT EXISTS activos (
+    id SERIAL PRIMARY KEY,
+    entidad VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(200) NOT NULL,
+    monto DECIMAL(15,2) DEFAULT 0,
+    fecha DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+  )`;
+
+  await sql`CREATE TABLE IF NOT EXISTS activos_historial (
+    id SERIAL PRIMARY KEY,
+    fecha DATE UNIQUE NOT NULL,
+    total DECIMAL(15,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW()
+  )`;
+
+  await sql`CREATE TABLE IF NOT EXISTS inversiones_cocos (
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(100) NOT NULL,
+    descripcion VARCHAR(200),
+    monto DECIMAL(15,2) DEFAULT 0,
+    fecha DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+  )`;
+
+  await sql`CREATE TABLE IF NOT EXISTS dolares (
+    id SERIAL PRIMARY KEY,
+    ubicacion VARCHAR(100) NOT NULL,
+    detalle VARCHAR(200),
+    monto DECIMAL(15,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+  )`;
+}
+
 async function resetSequence(sql: any, table: string) {
   let maxRows: Row[] = [];
   if (table === "config") maxRows = (await sql`SELECT COALESCE(MAX(id), 0) AS max_id FROM config`) as Row[];
@@ -56,6 +125,8 @@ export async function POST(request: NextRequest) {
 
     const source = neon(sourceUrl);
     const target = neon(targetUrl);
+
+    await ensureSchema(target);
 
     const configRows = (await source`SELECT id, key, value, updated_at FROM config ORDER BY id`) as Row[];
     const egresosRows = (await source`SELECT id, anio, mes, categoria, subcategoria, monto, created_at, updated_at FROM egresos ORDER BY id`) as Row[];
