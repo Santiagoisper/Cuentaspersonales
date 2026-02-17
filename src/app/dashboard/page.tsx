@@ -38,6 +38,8 @@ export default function DashboardPage() {
   const [moneda, setMoneda] = useState("ARS");
   const [gitLoading, setGitLoading] = useState(false);
   const [gitPullLoading, setGitPullLoading] = useState(false);
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [deploySyncLoading, setDeploySyncLoading] = useState(false);
   const [gitStatus, setGitStatus] = useState<string | null>(null);
 
   useEffect(() => {
@@ -151,6 +153,60 @@ export default function DashboardPage() {
     }
   };
 
+  const handleSyncData = async () => {
+    const ok = window.confirm("Esto va a sobrescribir datos en PRODUCCION con los de tu base local. Continuar?");
+    if (!ok) return;
+
+    setSyncLoading(true);
+    setGitStatus(null);
+    try {
+      const res = await fetch("/api/data/sync-to-production", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.details || data?.error || "Error al sincronizar");
+      setGitStatus(data?.message || "Sincronizacion completada");
+    } catch (err) {
+      setGitStatus(err instanceof Error ? err.message : "Error al sincronizar");
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
+  const handleDeployAndSync = async () => {
+    const ok = window.confirm("Esto va a subir codigo a git y luego sincronizar datos a produccion. Continuar?");
+    if (!ok) return;
+
+    setDeploySyncLoading(true);
+    setGitStatus("Subiendo codigo a git...");
+    try {
+      const pushRes = await fetch("/api/git/push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const pushData = await pushRes.json();
+      if (!pushRes.ok) throw new Error(pushData?.details || pushData?.error || "Error en push git");
+
+      setGitStatus("Sincronizando datos a produccion...");
+      const syncRes = await fetch("/api/data/sync-to-production", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const syncData = await syncRes.json();
+      if (!syncRes.ok) throw new Error(syncData?.details || syncData?.error || "Error en sync datos");
+
+      setGitStatus("Deploy + Sync completado");
+    } catch (err) {
+      setGitStatus(err instanceof Error ? err.message : "Error en Deploy + Sync");
+    } finally {
+      setDeploySyncLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f5f9ff]">
       <Sidebar />
@@ -164,17 +220,31 @@ export default function DashboardPage() {
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
               <button
                 onClick={handleGitPush}
-                disabled={gitLoading || gitPullLoading}
+                disabled={gitLoading || gitPullLoading || syncLoading || deploySyncLoading}
                 className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {gitLoading ? "Subiendo..." : "Subir al git"}
               </button>
               <button
                 onClick={handleGitPull}
-                disabled={gitLoading || gitPullLoading}
+                disabled={gitLoading || gitPullLoading || syncLoading || deploySyncLoading}
                 className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {gitPullLoading ? "Actualizando..." : "Pull"}
+              </button>
+              <button
+                onClick={handleSyncData}
+                disabled={gitLoading || gitPullLoading || syncLoading || deploySyncLoading}
+                className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {syncLoading ? "Sincronizando..." : "Sync datos"}
+              </button>
+              <button
+                onClick={handleDeployAndSync}
+                disabled={gitLoading || gitPullLoading || syncLoading || deploySyncLoading}
+                className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {deploySyncLoading ? "Ejecutando..." : "Deploy + Sync"}
               </button>
               {gitStatus && <p className="text-xs text-blue-100">{gitStatus}</p>}
             </div>
