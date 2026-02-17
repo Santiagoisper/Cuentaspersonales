@@ -50,6 +50,8 @@ interface InversionCocos {
 const ENTIDADES = ["GALICIA", "EFECTIVO", "COCOS CAPITAL", "Otro"];
 const TIPOS = ["activo", "inversion"];
 const TIPOS_COCOS = ["CAUCIONES", "ACCIONES", "LETRAS", "Obligaciones Negociables", "BONOS", "Otros"];
+const normalizeTipo = (value: string) => String(value || "").trim().toUpperCase();
+const isCaucion = (value: string) => normalizeTipo(value) === "CAUCIONES";
 
 export default function ActivosPage() {
   const [loading, setLoading] = useState(false);
@@ -157,7 +159,7 @@ export default function ActivosPage() {
   };
 
   const deleteActivo = async (id: number) => {
-    if (!confirm("Â¿Eliminar este activo?")) return;
+    if (!confirm("¿Eliminar este activo?")) return;
     await fetch("/api/activos", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -198,7 +200,7 @@ export default function ActivosPage() {
   };
 
   const deleteInv = async (id: number) => {
-    if (!confirm("Â¿Eliminar esta inversiÃ³n?")) return;
+    if (!confirm("¿Eliminar esta inversión?")) return;
     await fetch("/api/inversiones", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -213,7 +215,7 @@ export default function ActivosPage() {
 
   const totalActivos = activos.reduce((s, a) => s + Number(a.monto), 0);
   const ultimaCaucion = inversiones
-    .filter((i) => i.tipo === "CAUCIONES")
+    .filter((i) => isCaucion(i.tipo))
     .reduce<InversionCocos | null>((latest, curr) => {
       if (!latest) return curr;
       const latestFecha = String(latest.fecha || "").slice(0, 10);
@@ -223,7 +225,7 @@ export default function ActivosPage() {
       return curr.id > latest.id ? curr : latest;
     }, null);
   const totalInversiones = inversiones.reduce((s, i) => {
-    if (i.tipo === "CAUCIONES") return s;
+    if (isCaucion(i.tipo)) return s;
     return s + Number(i.monto);
   }, 0) + Number(ultimaCaucion?.monto || 0);
   const grandTotal = totalActivos + totalInversiones;
@@ -240,7 +242,7 @@ export default function ActivosPage() {
 
   const caucionesByDate: Record<string, number> = {};
   inversiones
-    .filter((i) => i.tipo === "CAUCIONES")
+    .filter((i) => isCaucion(i.tipo))
     .forEach((i) => {
       const fechaKey = String(i.fecha).slice(0, 10);
       caucionesByDate[fechaKey] = (caucionesByDate[fechaKey] || 0) + Number(i.monto);
@@ -292,7 +294,7 @@ export default function ActivosPage() {
           {/* Historical chart */}
           {chartData.length > 1 && (
             <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
-              <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">EvoluciÃ³n del Patrimonio</h2>
+              <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Evolución del Patrimonio</h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                   <LineChart data={chartData}>
@@ -396,7 +398,7 @@ export default function ActivosPage() {
               </button>
             </div>
             {TIPOS_COCOS.map((tipo) => {
-              const items = inversiones.filter((i) => i.tipo === tipo);
+              const items = inversiones.filter((i) => normalizeTipo(i.tipo) === normalizeTipo(tipo));
               if (items.length === 0) return null;
               return (
                 <div key={tipo}>
@@ -434,11 +436,11 @@ export default function ActivosPage() {
             </div>
           </div>
 
-          {/* Historico de Cauciones */}
+          {/* Histórico de Cauciones */}
           <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
               <div>
-                <h2 className="text-lg font-semibold text-[#0d2a5f]">Historico de Cauciones</h2>
+                <h2 className="text-lg font-semibold text-[#0d2a5f]">Histórico de Cauciones</h2>
                 <p className="text-sm text-[#5f769d]">Seguimiento diario: invertido vs dia anterior</p>
               </div>
               {caucionesHistorial.length > 1 && (
@@ -488,12 +490,12 @@ export default function ActivosPage() {
                 })}
               </div>
             ) : (
-              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin registros de cauciones todavia</p>
+              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin registros de cauciones todavía</p>
             )}
           </div>
 
           {/* Modal Activo */}
-          <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/InversiÃ³n"}>
+          <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/Inversión"}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Entidad</label>
@@ -504,11 +506,11 @@ export default function ActivosPage() {
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
                 <select value={fTipo} onChange={(e) => setFTipo(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
-                  {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "InversiÃ³n"}</option>)}
+                  {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "Inversión"}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">DescripciÃ³n</label>
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
                 <input type="text" value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ej: Caja de Ahorro, FIMA..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <div>
@@ -529,7 +531,7 @@ export default function ActivosPage() {
           </Modal>
 
           {/* Modal Inversion Cocos */}
-          <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar InversiÃ³n Cocos" : "Agregar InversiÃ³n Cocos"}>
+          <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar Inversión Cocos" : "Agregar Inversión Cocos"}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
@@ -538,8 +540,8 @@ export default function ActivosPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">DescripciÃ³n</label>
-                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="DescripciÃ³n..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
+                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="Descripción..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto</label>

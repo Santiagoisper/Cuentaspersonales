@@ -25,13 +25,17 @@ export async function getPatrimonioBreakdown(sql: SqlClient): Promise<Patrimonio
   const activosResult = await sql`SELECT COALESCE(SUM(monto), 0) AS total FROM activos`;
   const totalActivos = Number(activosResult[0]?.total || 0);
 
-  const inversionesSinCaucionResult = await sql`SELECT COALESCE(SUM(monto), 0) AS total FROM inversiones_cocos WHERE tipo <> 'CAUCIONES'`;
+  const inversionesSinCaucionResult = await sql`
+    SELECT COALESCE(SUM(monto), 0) AS total
+    FROM inversiones_cocos
+    WHERE UPPER(TRIM(tipo)) <> 'CAUCIONES'
+  `;
   const inversionesSinCaucion = Number(inversionesSinCaucionResult[0]?.total || 0);
 
   const ultimaCaucionResult = await sql`
     SELECT COALESCE(monto, 0) AS monto, fecha
     FROM inversiones_cocos
-    WHERE tipo = 'CAUCIONES'
+    WHERE UPPER(TRIM(tipo)) = 'CAUCIONES'
     ORDER BY fecha DESC, id DESC
     LIMIT 1
   `;
