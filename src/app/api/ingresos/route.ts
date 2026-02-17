@@ -19,8 +19,17 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const sql = getDb();
-    const { anio, mes, categoria, monto } = await request.json();
+    const { id, anio, mes, categoria, monto } = await request.json();
     const montoNum = Number(monto) || 0;
+    const idNum = Number(id);
+
+    if (idNum > 0) {
+      const rows = await sql`UPDATE ingresos
+         SET categoria = ${categoria}, monto = ${montoNum}, updated_at = NOW()
+         WHERE id = ${idNum}
+         RETURNING *`;
+      return NextResponse.json(rows[0] || null);
+    }
 
     const rows = await sql`INSERT INTO ingresos (anio, mes, categoria, monto)
        VALUES (${anio}, ${mes}, ${categoria}, ${montoNum})

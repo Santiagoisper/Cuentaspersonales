@@ -1,17 +1,17 @@
-﻿"use client";
+"use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const MESES = [
-  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
-];
 
 interface MonthSelectorProps {
   mes: number;
   anio: number;
   onChange: (mes: number, anio: number) => void;
 }
+
+const MESES = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+];
 
 export default function MonthSelector({ mes, anio, onChange }: MonthSelectorProps) {
   const prev = () => {
@@ -25,21 +25,21 @@ export default function MonthSelector({ mes, anio, onChange }: MonthSelectorProp
   };
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="inline-flex items-center rounded-xl border border-[#d3dff1] bg-white shadow-[0_8px_22px_rgba(22,70,152,0.08)]">
       <button
         onClick={prev}
-        className="p-2 rounded-xl border border-[#c9dbff] bg-white hover:bg-[#eef4ff] transition-colors text-[#1650c7]"
+        className="rounded-l-xl border-r border-[#dbe5f4] p-2.5 text-[#56719c] transition-colors hover:bg-[#edf3ff] hover:text-[#0d2a5f]"
       >
-        <ChevronLeft size={18} />
+        <ChevronLeft size={16} />
       </button>
-      <span className="text-lg font-semibold min-w-[180px] text-center text-[#0a2a66]">
+      <span className="min-w-[150px] px-5 text-center text-sm font-semibold text-[#0d2a5f]">
         {MESES[mes - 1]} {anio}
       </span>
       <button
         onClick={next}
-        className="p-2 rounded-xl border border-[#c9dbff] bg-white hover:bg-[#eef4ff] transition-colors text-[#1650c7]"
+        className="rounded-r-xl border-l border-[#dbe5f4] p-2.5 text-[#56719c] transition-colors hover:bg-[#edf3ff] hover:text-[#0d2a5f]"
       >
-        <ChevronRight size={18} />
+        <ChevronRight size={16} />
       </button>
     </div>
   );

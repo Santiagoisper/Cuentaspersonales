@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -127,7 +127,7 @@ export default function ActivosPage() {
   };
 
   const deleteActivo = async (id: number) => {
-    if (!confirm("Â¿Eliminar este activo?")) return;
+    if (!confirm("¿Eliminar este activo?")) return;
     await fetch("/api/activos", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
@@ -160,14 +160,14 @@ export default function ActivosPage() {
   };
 
   const deleteInv = async (id: number) => {
-    if (!confirm("Â¿Eliminar esta inversiÃ³n?")) return;
+    if (!confirm("¿Eliminar esta inversión?")) return;
     await fetch("/api/inversiones", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     fetchData();
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -191,26 +191,26 @@ export default function ActivosPage() {
   const dailyDiff = todayTotal - yesterdayTotal;
 
   return (
-    <div className="min-h-screen bg-[#f4f8ff]">
+    <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
       <Sidebar />
-      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
+      <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
         <div className="max-w-6xl mx-auto space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-[#0a2a66]">Activos & Inversiones</h1>
-            <p className="text-[#5a6f99]">Patrimonio y portafolio de inversiones</p>
+            <h1 className="text-2xl font-bold text-[#0d2a5f]">Activos & Inversiones</h1>
+            <p className="text-[#5f769d]">Patrimonio y portafolio de inversiones</p>
           </div>
 
           <DollarBanner onCotizacionChange={setCotizacion} onMonedaChange={setMoneda} />
 
           {/* Grand Total */}
-          <div className="bg-gradient-to-r from-[#eef4ff] to-[#ffffff] rounded-xl border border-[#d7e4ff] p-6">
+          <div className="bg-gradient-to-r from-[#eef4ff] to-[#ffffff] rounded-xl border border-[#d6e2f4] p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <p className="text-sm text-[#5a6f99]">Total Patrimonio</p>
-                <p className="text-3xl font-bold text-[#0a2a66] mt-1">{fmt(grandTotal)}</p>
+                <p className="text-sm text-[#5f769d]">Total Patrimonio</p>
+                <p className="text-3xl font-bold text-[#0d2a5f] mt-1">{fmt(grandTotal)}</p>
               </div>
               {dailyDiff !== 0 && (
-                <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${dailyDiff > 0 ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
+                <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${dailyDiff > 0 ? "bg-green-500/10 text-[#10b981]" : "bg-red-500/10 text-[#ef4444]"}`}>
                   {dailyDiff > 0 ? <ArrowUpRight size={18} /> : <ArrowDownRight size={18} />}
                   <span className="font-medium">{fmt(Math.abs(dailyDiff))} vs ayer</span>
                 </div>
@@ -220,8 +220,8 @@ export default function ActivosPage() {
 
           {/* Historical chart */}
           {chartData.length > 1 && (
-            <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
-              <h2 className="text-lg font-semibold text-[#0a2a66] mb-4">EvoluciÃ³n del Patrimonio</h2>
+            <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
+              <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Evolución del Patrimonio</h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                   <LineChart data={chartData}>
@@ -237,44 +237,44 @@ export default function ActivosPage() {
           )}
 
           {/* Activos Section */}
-          <div className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d7e4ff]">
-              <h2 className="text-lg font-semibold text-[#0a2a66]">Activos</h2>
+          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
+              <h2 className="text-lg font-semibold text-[#0d2a5f]">Activos</h2>
               <button onClick={openAddActivo} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1650c7] hover:bg-[#1141a6] text-white text-sm font-medium transition-colors">
                 <Plus size={16} /> Agregar
               </button>
             </div>
             {activosList.length > 0 ? (
-              <div className="divide-y divide-[#e5edff]">
+              <div className="divide-y divide-[#e1eaf7]">
                 {activosList.map((a) => (
-                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#eef4ff]/30 transition-colors">
+                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
                     <div>
-                      <span className="font-medium text-[#0a2a66]">{a.entidad}</span>
-                      <span className="text-[#5a6f99] ml-2">- {a.descripcion}</span>
+                      <span className="font-medium text-[#0d2a5f]">{a.entidad}</span>
+                      <span className="text-[#5f769d] ml-2">- {a.descripcion}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-medium text-[#0a2a66]">{fmt(Number(a.monto))}</span>
-                      <button onClick={() => openEditActivo(a)} className="text-[#7a8fb8] hover:text-blue-400"><Pencil size={16} /></button>
-                      <button onClick={() => deleteActivo(a.id)} className="text-[#7a8fb8] hover:text-red-400"><Trash2 size={16} /></button>
+                      <span className="font-medium text-[#0d2a5f]">{fmt(Number(a.monto))}</span>
+                      <button onClick={() => openEditActivo(a)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
+                      <button onClick={() => deleteActivo(a.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="px-4 py-4 text-[#7a8fb8] text-sm">Sin activos registrados</p>
+              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin activos registrados</p>
             )}
-            <div className="px-4 py-3 border-t border-[#c9dbff] bg-[#f4f8ff]/50">
+            <div className="px-4 py-3 border-t border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
               <div className="flex justify-between">
-                <span className="font-bold text-[#0a2a66]">Subtotal Activos</span>
-                <span className="font-bold text-[#0a2a66]">{fmt(activosList.reduce((s, a) => s + Number(a.monto), 0))}</span>
+                <span className="font-bold text-[#0d2a5f]">Subtotal Activos</span>
+                <span className="font-bold text-[#0d2a5f]">{fmt(activosList.reduce((s, a) => s + Number(a.monto), 0))}</span>
               </div>
             </div>
           </div>
 
           {/* Inversiones (entidades) */}
-          <div className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d7e4ff]">
-              <h2 className="text-lg font-semibold text-[#0a2a66]">Inversiones (Entidades)</h2>
+          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
+              <h2 className="text-lg font-semibold text-[#0d2a5f]">Inversiones (Entidades)</h2>
               <button
                 onClick={() => {
                   setEditActivo(null);
@@ -290,37 +290,37 @@ export default function ActivosPage() {
               </button>
             </div>
             {inversionesList.length > 0 ? (
-              <div className="divide-y divide-[#e5edff]">
+              <div className="divide-y divide-[#e1eaf7]">
                 {inversionesList.map((a) => (
-                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#eef4ff]/30 transition-colors">
+                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
                     <div>
-                      <span className="font-medium text-[#0a2a66]">{a.entidad}</span>
-                      <span className="text-[#5a6f99] ml-2">- {a.descripcion}</span>
+                      <span className="font-medium text-[#0d2a5f]">{a.entidad}</span>
+                      <span className="text-[#5f769d] ml-2">- {a.descripcion}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-medium text-purple-400">{fmt(Number(a.monto))}</span>
-                      <button onClick={() => openEditActivo(a)} className="text-[#7a8fb8] hover:text-blue-400"><Pencil size={16} /></button>
-                      <button onClick={() => deleteActivo(a.id)} className="text-[#7a8fb8] hover:text-red-400"><Trash2 size={16} /></button>
+                      <span className="font-medium text-[#c084fc]">{fmt(Number(a.monto))}</span>
+                      <button onClick={() => openEditActivo(a)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
+                      <button onClick={() => deleteActivo(a.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="px-4 py-4 text-[#7a8fb8] text-sm">Sin inversiones registradas</p>
+              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin inversiones registradas</p>
             )}
-            <div className="px-4 py-3 border-t border-[#c9dbff] bg-[#f4f8ff]/50">
+            <div className="px-4 py-3 border-t border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
               <div className="flex justify-between">
-                <span className="font-bold text-[#0a2a66]">Subtotal Inversiones</span>
-                <span className="font-bold text-purple-400">{fmt(inversionesList.reduce((s, a) => s + Number(a.monto), 0))}</span>
+                <span className="font-bold text-[#0d2a5f]">Subtotal Inversiones</span>
+                <span className="font-bold text-[#c084fc]">{fmt(inversionesList.reduce((s, a) => s + Number(a.monto), 0))}</span>
               </div>
             </div>
           </div>
 
           {/* Cocos Capital */}
-          <div className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d7e4ff]">
-              <h2 className="text-lg font-semibold text-[#0a2a66]">Cocos Capital - Inversiones</h2>
-              <button onClick={openAddInv} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black text-sm font-medium transition-colors">
+          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
+              <h2 className="text-lg font-semibold text-[#0d2a5f]">Cocos Capital - Inversiones</h2>
+              <button onClick={openAddInv} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white text-sm font-medium transition-colors">
                 <Plus size={16} /> Agregar
               </button>
             </div>
@@ -329,17 +329,17 @@ export default function ActivosPage() {
               if (items.length === 0) return null;
               return (
                 <div key={tipo}>
-                  <div className="px-4 py-2 bg-[#eef4ff]/30">
-                    <span className="text-sm font-medium text-yellow-400">{tipo}</span>
+                  <div className="px-4 py-2 bg-[#f5f8ff]/30">
+                    <span className="text-sm font-medium text-[#1652c4]">{tipo}</span>
                   </div>
-                  <div className="divide-y divide-[#e5edff]">
+                  <div className="divide-y divide-[#e1eaf7]">
                     {items.map((i) => (
-                      <div key={i.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#eef4ff]/30 transition-colors">
-                        <span className="text-[#5a6f99]">{i.descripcion || tipo}</span>
+                      <div key={i.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
+                        <span className="text-[#5f769d]">{i.descripcion || tipo}</span>
                         <div className="flex items-center gap-3">
-                          <span className="font-medium text-[#0a2a66]">{fmt(Number(i.monto))}</span>
-                          <button onClick={() => openEditInv(i)} className="text-[#7a8fb8] hover:text-blue-400"><Pencil size={16} /></button>
-                          <button onClick={() => deleteInv(i.id)} className="text-[#7a8fb8] hover:text-red-400"><Trash2 size={16} /></button>
+                          <span className="font-medium text-[#0d2a5f]">{fmt(Number(i.monto))}</span>
+                          <button onClick={() => openEditInv(i)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
+                          <button onClick={() => deleteInv(i.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                         </div>
                       </div>
                     ))}
@@ -348,38 +348,38 @@ export default function ActivosPage() {
               );
             })}
             {inversiones.length === 0 && (
-              <p className="px-4 py-4 text-[#7a8fb8] text-sm">Sin inversiones en Cocos Capital</p>
+              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin inversiones en Cocos Capital</p>
             )}
-            <div className="px-4 py-3 border-t border-[#c9dbff] bg-[#f4f8ff]/50">
+            <div className="px-4 py-3 border-t border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
               <div className="flex justify-between">
-                <span className="font-bold text-[#0a2a66]">Subtotal Cocos Capital</span>
-                <span className="font-bold text-yellow-400">{fmt(totalInversiones)}</span>
+                <span className="font-bold text-[#0d2a5f]">Subtotal Cocos Capital</span>
+                <span className="font-bold text-[#1652c4]">{fmt(totalInversiones)}</span>
               </div>
             </div>
           </div>
 
           {/* Modal Activo */}
-          <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/InversiÃ³n"}>
+          <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/Inversión"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Entidad</label>
-                <select value={fEntidad} onChange={(e) => setFEntidad(e.target.value)} className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]">
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Entidad</label>
+                <select value={fEntidad} onChange={(e) => setFEntidad(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
                   {ENTIDADES.map((e) => <option key={e} value={e}>{e}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Tipo</label>
-                <select value={fTipo} onChange={(e) => setFTipo(e.target.value)} className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]">
-                  {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "InversiÃ³n"}</option>)}
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
+                <select value={fTipo} onChange={(e) => setFTipo(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
+                  {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "Inversión"}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">DescripciÃ³n</label>
-                <input type="text" value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ej: Caja de Ahorro, FIMA..." className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]" />
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
+                <input type="text" value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ej: Caja de Ahorro, FIMA..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Monto</label>
-                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]" />
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto</label>
+                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <button onClick={saveActivo} className="w-full py-2 rounded-lg bg-[#1650c7] hover:bg-[#1141a6] text-white font-medium transition-colors">
                 {editActivo ? "Actualizar" : "Guardar"}
@@ -388,23 +388,23 @@ export default function ActivosPage() {
           </Modal>
 
           {/* Modal Inversion Cocos */}
-          <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar InversiÃ³n Cocos" : "Agregar InversiÃ³n Cocos"}>
+          <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar Inversión Cocos" : "Agregar Inversión Cocos"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Tipo</label>
-                <select value={fInvTipo} onChange={(e) => setFInvTipo(e.target.value)} className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]">
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
+                <select value={fInvTipo} onChange={(e) => setFInvTipo(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
                   {TIPOS_COCOS.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">DescripciÃ³n</label>
-                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="DescripciÃ³n..." className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]" />
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
+                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="Descripción..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5a6f99] mb-1">Monto</label>
-                <input type="number" value={fInvMonto} onChange={(e) => setFInvMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#eef4ff] border border-[#c9dbff] rounded-lg px-3 py-2 text-[#0a2a66]" />
+                <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto</label>
+                <input type="number" value={fInvMonto} onChange={(e) => setFInvMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
               </div>
-              <button onClick={saveInv} className="w-full py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors">
+              <button onClick={saveInv} className="w-full py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white font-medium transition-colors">
                 {editInv ? "Actualizar" : "Guardar"}
               </button>
             </div>
@@ -414,5 +414,6 @@ export default function ActivosPage() {
     </div>
   );
 }
+
 
 

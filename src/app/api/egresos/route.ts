@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { dedupeEgresos, normalizeCategoria, normalizeSubcategoria } from "@/lib/egresos-normalize";
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
     const mes = Number(searchParams.get("mes")) || new Date().getMonth() + 1;
 
     const rows = await sql`SELECT * FROM egresos WHERE anio = ${anio} AND mes = ${mes} ORDER BY categoria, subcategoria`;
-    return NextResponse.json(rows);
+    return NextResponse.json(dedupeEgresos(rows));
   } catch (error) {
     console.error("Error fetching egresos:", error);
     return NextResponse.json([]);
@@ -19,11 +20,22 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const sql = getDb();
-    const { anio, mes, categoria, subcategoria, monto } = await request.json();
+    const { id, anio, mes, categoria, subcategoria, monto } = await request.json();
+    const categoriaNorm = normalizeCategoria(String(categoria || ""));
+    const subcategoriaNorm = normalizeSubcategoria(categoriaNorm, String(subcategoria || ""));
     const montoNum = Number(monto) || 0;
+    const idNum = Number(id);
+
+    if (idNum > 0) {
+      const rows = await sql`UPDATE egresos
+         SET categoria = ${categoriaNorm}, subcategoria = ${subcategoriaNorm}, monto = ${montoNum}, updated_at = NOW()
+         WHERE id = ${idNum}
+         RETURNING *`;
+      return NextResponse.json(rows[0] || null);
+    }
 
     const rows = await sql`INSERT INTO egresos (anio, mes, categoria, subcategoria, monto)
-       VALUES (${anio}, ${mes}, ${categoria}, ${subcategoria}, ${montoNum})
+       VALUES (${anio}, ${mes}, ${categoriaNorm}, ${subcategoriaNorm}, ${montoNum})
        ON CONFLICT (anio, mes, categoria, subcategoria)
        DO UPDATE SET monto = ${montoNum}, updated_at = NOW()
        RETURNING *`;

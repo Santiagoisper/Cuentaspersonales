@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -66,7 +66,7 @@ export default function ResumenPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f4f8ff]">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -74,13 +74,13 @@ export default function ResumenPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#f4f8ff]">
+      <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
         <Sidebar />
-        <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
+        <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
           <div className="max-w-6xl mx-auto">
             <div className="bg-white border border-red-500/30 rounded-xl p-6">
-              <h1 className="text-xl font-bold text-[#0a2a66] mb-2">Error al cargar el resumen</h1>
-              <p className="text-red-300">{error}</p>
+              <h1 className="text-xl font-bold text-[#0d2a5f] mb-2">Error al cargar el resumen</h1>
+              <p className="text-[#c83467]">{error}</p>
             </div>
           </div>
         </main>
@@ -98,84 +98,84 @@ export default function ResumenPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#f4f8ff]">
+    <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
       <Sidebar />
-      <main className="lg:ml-72 p-5 pt-20 lg:p-10 lg:pt-10">
+      <main className="p-5 pt-24 sm:pt-20 md:p-10 md:pt-10">
         <div className="max-w-6xl mx-auto space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-[#0a2a66]">Resumen General</h1>
-            <p className="text-[#5a6f99]">Comparativa mensual de ingresos vs egresos</p>
+            <h1 className="text-2xl font-bold text-[#0d2a5f]">Resumen General</h1>
+            <p className="text-[#5f769d]">Comparativa mensual de ingresos vs egresos</p>
           </div>
 
           <DollarBanner onCotizacionChange={setCotizacion} onMonedaChange={setMoneda} />
 
           {/* Year selector */}
           <div className="flex items-center gap-4">
-            <button onClick={() => setAnio(anio - 1)} className="p-2 rounded-lg bg-[#eef4ff] hover:bg-[#dbe8ff] transition-colors">
+            <button onClick={() => setAnio(anio - 1)} className="p-2 rounded-lg bg-[#f5f8ff] hover:bg-[#dbe8ff] transition-colors">
               <ChevronLeft size={18} />
             </button>
-            <span className="text-xl font-bold text-[#0a2a66]">{anio}</span>
-            <button onClick={() => setAnio(anio + 1)} className="p-2 rounded-lg bg-[#eef4ff] hover:bg-[#dbe8ff] transition-colors">
+            <span className="text-xl font-bold text-[#0d2a5f]">{anio}</span>
+            <button onClick={() => setAnio(anio + 1)} className="p-2 rounded-lg bg-[#f5f8ff] hover:bg-[#dbe8ff] transition-colors">
               <ChevronRight size={18} />
             </button>
           </div>
 
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white rounded-xl border border-[#d7e4ff] p-5">
-              <p className="text-sm text-[#5a6f99]">Total Ingresos {anio}</p>
-              <p className="text-2xl font-bold text-green-400 mt-1">{fmt(totalIng)}</p>
+            <div className="bg-white rounded-xl border border-[#d6e2f4] p-5">
+              <p className="text-sm text-[#5f769d]">Total Ingresos {anio}</p>
+              <p className="text-2xl font-bold text-[#10b981] mt-1">{fmt(totalIng)}</p>
             </div>
-            <div className="bg-white rounded-xl border border-[#d7e4ff] p-5">
-              <p className="text-sm text-[#5a6f99]">Total Egresos {anio}</p>
-              <p className="text-2xl font-bold text-red-400 mt-1">{fmt(totalEgr)}</p>
+            <div className="bg-white rounded-xl border border-[#d6e2f4] p-5">
+              <p className="text-sm text-[#5f769d]">Total Egresos {anio}</p>
+              <p className="text-2xl font-bold text-[#ef4444] mt-1">{fmt(totalEgr)}</p>
             </div>
-            <div className="bg-white rounded-xl border border-[#d7e4ff] p-5">
-              <p className="text-sm text-[#5a6f99]">Balance {anio}</p>
-              <p className={`text-2xl font-bold mt-1 ${totalDiff >= 0 ? "text-green-400" : "text-red-400"}`}>{fmt(totalDiff)}</p>
+            <div className="bg-white rounded-xl border border-[#d6e2f4] p-5">
+              <p className="text-sm text-[#5f769d]">Balance {anio}</p>
+              <p className={`text-2xl font-bold mt-1 ${totalDiff >= 0 ? "text-[#10b981]" : "text-[#ef4444]"}`}>{fmt(totalDiff)}</p>
             </div>
           </div>
 
           {/* Table */}
-          <div className="bg-white rounded-xl border border-[#d7e4ff] overflow-hidden">
+          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-[#d7e4ff]">
-                    <th className="px-6 py-4 text-left text-sm font-medium text-[#5a6f99]">Mes</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Ingresos</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Egresos</th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5a6f99]">Diferencia</th>
-                    <th className="px-6 py-4 text-center text-sm font-medium text-[#5a6f99]">Tendencia</th>
+                  <tr className="border-b border-[#d6e2f4]">
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#5f769d]">Mes</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5f769d]">Ingresos</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5f769d]">Egresos</th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-[#5f769d]">Diferencia</th>
+                    <th className="px-6 py-4 text-center text-sm font-medium text-[#5f769d]">Tendencia</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e5edff]">
+                <tbody className="divide-y divide-[#e1eaf7]">
                   {resumen.map((r) => (
-                    <tr key={r.mes} className="hover:bg-[#eef4ff]/30 transition-colors">
-                      <td className="px-6 py-4 font-medium text-[#0a2a66]">{MESES[r.mes - 1]}</td>
-                      <td className="px-6 py-4 text-right text-green-400 font-medium">{fmt(r.ingresos)}</td>
-                      <td className="px-6 py-4 text-right text-red-400 font-medium">{fmt(r.egresos)}</td>
-                      <td className={`px-6 py-4 text-right font-bold ${r.diferencia >= 0 ? "text-green-400" : "text-red-400"}`}>
+                    <tr key={r.mes} className="hover:bg-[#f5f8ff]/30 transition-colors">
+                      <td className="px-6 py-4 font-medium text-[#0d2a5f]">{MESES[r.mes - 1]}</td>
+                      <td className="px-6 py-4 text-right text-[#10b981] font-medium">{fmt(r.ingresos)}</td>
+                      <td className="px-6 py-4 text-right text-[#ef4444] font-medium">{fmt(r.egresos)}</td>
+                      <td className={`px-6 py-4 text-right font-bold ${r.diferencia >= 0 ? "text-[#10b981]" : "text-[#ef4444]"}`}>
                         {fmt(r.diferencia)}
                       </td>
                       <td className="px-6 py-4 text-center">
                         {r.diferencia > 0 ? (
-                          <TrendingUp className="inline text-green-400" size={18} />
+                          <TrendingUp className="inline text-[#10b981]" size={18} />
                         ) : r.diferencia < 0 ? (
-                          <TrendingDown className="inline text-red-400" size={18} />
+                          <TrendingDown className="inline text-[#ef4444]" size={18} />
                         ) : (
-                          <Minus className="inline text-[#7a8fb8]" size={18} />
+                          <Minus className="inline text-[#6b84ac]" size={18} />
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="border-t-2 border-[#c9dbff] bg-[#f4f8ff]/50">
-                    <td className="px-6 py-4 font-bold text-[#0a2a66]">TOTAL</td>
-                    <td className="px-6 py-4 text-right font-bold text-green-400">{fmt(totalIng)}</td>
-                    <td className="px-6 py-4 text-right font-bold text-red-400">{fmt(totalEgr)}</td>
-                    <td className={`px-6 py-4 text-right font-bold ${totalDiff >= 0 ? "text-green-400" : "text-red-400"}`}>
+                  <tr className="border-t-2 border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
+                    <td className="px-6 py-4 font-bold text-[#0d2a5f]">TOTAL</td>
+                    <td className="px-6 py-4 text-right font-bold text-[#10b981]">{fmt(totalIng)}</td>
+                    <td className="px-6 py-4 text-right font-bold text-[#ef4444]">{fmt(totalEgr)}</td>
+                    <td className={`px-6 py-4 text-right font-bold ${totalDiff >= 0 ? "text-[#10b981]" : "text-[#ef4444]"}`}>
                       {fmt(totalDiff)}
                     </td>
                     <td></td>
@@ -186,8 +186,8 @@ export default function ResumenPage() {
           </div>
 
           {/* Chart */}
-          <div className="bg-white rounded-xl border border-[#d7e4ff] p-6">
-            <h2 className="text-lg font-semibold text-[#0a2a66] mb-6">Balance Mensual</h2>
+          <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
+            <h2 className="text-lg font-semibold text-[#0d2a5f] mb-6">Balance Mensual</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
                 <AreaChart data={chartData}>
@@ -224,5 +224,6 @@ export default function ResumenPage() {
     </div>
   );
 }
+
 
 

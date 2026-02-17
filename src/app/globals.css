@@ -1,18 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #f4f8ff;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --bg-input: #eef4ff;
-  --text-primary: #0a2a66;
-  --text-secondary: #5a6f99;
-  --accent-blue: #1650c7;
-  --accent-green: #0f9b62;
-  --accent-red: #d0465d;
-  --accent-yellow: #d18b00;
-  --accent-purple: #5f63d6;
-  --border-color: #d7e4ff;
+  --nn-primary: #1652c4;
+  --nn-primary-dark: #0f3c92;
+  --nn-primary-soft: #eaf1ff;
+  --nn-secondary: #0d2a5f;
+  --nn-bg: #f6f9ff;
+  --nn-surface: #ffffff;
+  --nn-text: #10264a;
+  --nn-text-muted: #5f769d;
+  --nn-border: #d6e1f2;
+  --nn-border-strong: #c2d2ec;
 }
 
 * {
@@ -21,29 +19,37 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
-  background: radial-gradient(circle at 80% -20%, #dce9ff 0, transparent 38%),
-    radial-gradient(circle at 0% 40%, #edf4ff 0, transparent 40%),
-    var(--bg-primary);
-  color: var(--text-primary);
-  font-family: "Segoe UI", "Aptos", "Helvetica Neue", sans-serif;
+  background:
+    radial-gradient(circle at 8% -4%, #e3ecff 0%, transparent 42%),
+    radial-gradient(circle at 100% 0%, #d8e8ff 0%, transparent 35%),
+    linear-gradient(180deg, #f7faff 0%, #f2f7ff 100%);
+  color: var(--nn-text);
+  font-family: "Aptos", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0f5ff;
+  background: #edf3ff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #bfd1f7;
-  border-radius: 4px;
+  background: #bfd0ee;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #95b1ea;
+  background: #97afd6;
 }
 
 table {
@@ -58,7 +64,7 @@ td {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -73,7 +79,7 @@ td {
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-16px);
   }
   to {
     opacity: 1;
@@ -85,6 +91,11 @@ td {
   animation: slideIn 0.3s ease-out;
 }
 
+.nn-glass {
+  background: color-mix(in srgb, var(--nn-surface) 86%, #f0f6ff 14%);
+  backdrop-filter: blur(8px);
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -94,4 +105,3 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
