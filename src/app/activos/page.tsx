@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -207,7 +207,7 @@ export default function ActivosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--nn-bg)]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -264,23 +264,23 @@ export default function ActivosPage() {
   const caucionesDiff = caucionesHoy - caucionesAyer;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
+    <div className="min-h-screen bg-[var(--nn-bg)]">
       <Sidebar />
       <main className="p-5 md:p-10 md:pr-[18rem]">
         <div className="max-w-6xl mx-auto space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-[#0d2a5f]">Activos & Inversiones</h1>
-            <p className="text-[#5f769d]">Patrimonio y portafolio de inversiones</p>
+            <h1 className="text-2xl font-bold text-[var(--nn-true-blue)]">Activos & Inversiones</h1>
+            <p className="text-[var(--nn-text-muted)]">Patrimonio y portafolio de inversiones</p>
           </div>
 
           <DollarBanner onCotizacionChange={setCotizacion} onMonedaChange={setMoneda} />
 
           {/* Grand Total */}
-          <div className="bg-gradient-to-r from-[#eef4ff] to-[#ffffff] rounded-xl border border-[#d6e2f4] p-6">
+          <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <p className="text-sm text-[#5f769d]">Total Patrimonio</p>
-                <p className="text-3xl font-bold text-[#0d2a5f] mt-1">{fmt(grandTotal)}</p>
+                <p className="text-sm text-[var(--nn-text-muted)]">Total Patrimonio</p>
+                <p className="text-3xl font-bold text-[var(--nn-true-blue)] mt-1">{fmt(grandTotal)}</p>
               </div>
               {comparacion?.tiene_dato_ayer && dailyDiff !== 0 && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${dailyDiff > 0 ? "bg-green-500/10 text-[#10b981]" : "bg-red-500/10 text-[#ef4444]"}`}>
@@ -293,8 +293,8 @@ export default function ActivosPage() {
 
           {/* Historical chart */}
           {chartData.length > 1 && (
-            <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
-              <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Evolución del Patrimonio</h2>
+            <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] p-6">
+              <h2 className="text-lg font-semibold text-[var(--nn-true-blue)] mb-4">Evolución del Patrimonio</h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                   <LineChart data={chartData}>
@@ -310,44 +310,44 @@ export default function ActivosPage() {
           )}
 
           {/* Activos Section */}
-          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
-              <h2 className="text-lg font-semibold text-[#0d2a5f]">Activos</h2>
-              <button onClick={openAddActivo} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1650c7] hover:bg-[#1141a6] text-white text-sm font-medium transition-colors">
+          <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[var(--nn-border)]">
+              <h2 className="text-lg font-semibold text-[var(--nn-true-blue)]">Activos</h2>
+              <button onClick={openAddActivo} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] text-white text-sm font-medium transition-colors">
                 <Plus size={16} /> Agregar
               </button>
             </div>
             {activosList.length > 0 ? (
-              <div className="divide-y divide-[#e1eaf7]">
+              <div className="divide-y divide-[var(--nn-border)]">
                 {activosList.map((a) => (
-                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
+                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[var(--nn-bg)] transition-colors">
                     <div>
-                      <span className="font-medium text-[#0d2a5f]">{a.entidad}</span>
-                      <span className="text-[#5f769d] ml-2">- {a.descripcion}</span>
+                      <span className="font-medium text-[var(--nn-true-blue)]">{a.entidad}</span>
+                      <span className="text-[var(--nn-text-muted)] ml-2">- {a.descripcion}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-medium text-[#0d2a5f]">{fmt(Number(a.monto))}</span>
-                      <button onClick={() => openEditActivo(a)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
-                      <button onClick={() => deleteActivo(a.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
+                      <span className="font-medium text-[var(--nn-true-blue)]">{fmt(Number(a.monto))}</span>
+                      <button onClick={() => openEditActivo(a)} className="text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)]"><Pencil size={16} /></button>
+                      <button onClick={() => deleteActivo(a.id)} className="text-[var(--nn-text-muted)] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin activos registrados</p>
+              <p className="px-4 py-4 text-[var(--nn-text-muted)] text-sm">Sin activos registrados</p>
             )}
-            <div className="px-4 py-3 border-t border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
+            <div className="px-4 py-3 border-t border-[var(--nn-border)] bg-[var(--nn-bg)]">
               <div className="flex justify-between">
-                <span className="font-bold text-[#0d2a5f]">Subtotal Activos</span>
-                <span className="font-bold text-[#0d2a5f]">{fmt(activosList.reduce((s, a) => s + Number(a.monto), 0))}</span>
+                <span className="font-bold text-[var(--nn-true-blue)]">Subtotal Activos</span>
+                <span className="font-bold text-[var(--nn-true-blue)]">{fmt(activosList.reduce((s, a) => s + Number(a.monto), 0))}</span>
               </div>
             </div>
           </div>
 
           {/* Inversiones (entidades) */}
-          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
-              <h2 className="text-lg font-semibold text-[#0d2a5f]">Inversiones (Entidades)</h2>
+          <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[var(--nn-border)]">
+              <h2 className="text-lg font-semibold text-[var(--nn-true-blue)]">Inversiones (Entidades)</h2>
               <button
                 onClick={() => {
                   setEditActivo(null);
@@ -357,43 +357,43 @@ export default function ActivosPage() {
                   setFMonto("");
                   setModalActivo(true);
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#5f63d6] hover:bg-[#4e51bc] text-white text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--nn-light-blue)] hover:bg-[var(--nn-true-blue)] text-white text-sm font-medium transition-colors"
               >
                 <Plus size={16} /> Agregar
               </button>
             </div>
             {inversionesList.length > 0 ? (
-              <div className="divide-y divide-[#e1eaf7]">
+              <div className="divide-y divide-[var(--nn-border)]">
                 {inversionesList.map((a) => (
-                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
+                  <div key={a.id} className="flex items-center justify-between px-4 py-3 hover:bg-[var(--nn-bg)] transition-colors">
                     <div>
-                      <span className="font-medium text-[#0d2a5f]">{a.entidad}</span>
-                      <span className="text-[#5f769d] ml-2">- {a.descripcion}</span>
+                      <span className="font-medium text-[var(--nn-true-blue)]">{a.entidad}</span>
+                      <span className="text-[var(--nn-text-muted)] ml-2">- {a.descripcion}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-medium text-[#c084fc]">{fmt(Number(a.monto))}</span>
-                      <button onClick={() => openEditActivo(a)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
-                      <button onClick={() => deleteActivo(a.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
+                      <button onClick={() => openEditActivo(a)} className="text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)]"><Pencil size={16} /></button>
+                      <button onClick={() => deleteActivo(a.id)} className="text-[var(--nn-text-muted)] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin inversiones registradas</p>
+              <p className="px-4 py-4 text-[var(--nn-text-muted)] text-sm">Sin inversiones registradas</p>
             )}
-            <div className="px-4 py-3 border-t border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
+            <div className="px-4 py-3 border-t border-[var(--nn-border)] bg-[var(--nn-bg)]">
               <div className="flex justify-between">
-                <span className="font-bold text-[#0d2a5f]">Subtotal Inversiones</span>
+                <span className="font-bold text-[var(--nn-true-blue)]">Subtotal Inversiones</span>
                 <span className="font-bold text-[#c084fc]">{fmt(inversionesList.reduce((s, a) => s + Number(a.monto), 0))}</span>
               </div>
             </div>
           </div>
 
           {/* Cocos Capital */}
-          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
-              <h2 className="text-lg font-semibold text-[#0d2a5f]">Cocos Capital - Inversiones</h2>
-              <button onClick={openAddInv} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white text-sm font-medium transition-colors">
+          <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[var(--nn-border)]">
+              <h2 className="text-lg font-semibold text-[var(--nn-true-blue)]">Cocos Capital - Inversiones</h2>
+              <button onClick={openAddInv} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] text-white text-sm font-medium transition-colors">
                 <Plus size={16} /> Agregar
               </button>
             </div>
@@ -402,22 +402,22 @@ export default function ActivosPage() {
               if (items.length === 0) return null;
               return (
                 <div key={tipo}>
-                  <div className="px-4 py-2 bg-[#f5f8ff]/30">
-                    <span className="text-sm font-medium text-[#1652c4]">{tipo}</span>
+                  <div className="px-4 py-2 bg-[var(--nn-bg)]/30">
+                    <span className="text-sm font-medium text-[var(--nn-true-blue)]">{tipo}</span>
                   </div>
-                  <div className="divide-y divide-[#e1eaf7]">
+                  <div className="divide-y divide-[var(--nn-border)]">
                     {items.map((i) => (
-                      <div key={i.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
+                      <div key={i.id} className="flex items-center justify-between px-4 py-3 hover:bg-[var(--nn-bg)] transition-colors">
                         <div>
-                          <span className="text-[#5f769d]">{i.descripcion || tipo}</span>
-                          <p className="text-xs text-[#90a3c5] mt-0.5">
+                          <span className="text-[var(--nn-text-muted)]">{i.descripcion || tipo}</span>
+                          <p className="text-xs text-[var(--nn-text-muted)] mt-0.5">
                             {new Date(`${String(i.fecha).slice(0, 10)}T00:00:00`).toLocaleDateString("es-AR")}
                           </p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="font-medium text-[#0d2a5f]">{fmt(Number(i.monto))}</span>
-                          <button onClick={() => openEditInv(i)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
-                          <button onClick={() => deleteInv(i.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
+                          <span className="font-medium text-[var(--nn-true-blue)]">{fmt(Number(i.monto))}</span>
+                          <button onClick={() => openEditInv(i)} className="text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)]"><Pencil size={16} /></button>
+                          <button onClick={() => deleteInv(i.id)} className="text-[var(--nn-text-muted)] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                         </div>
                       </div>
                     ))}
@@ -426,25 +426,25 @@ export default function ActivosPage() {
               );
             })}
             {inversiones.length === 0 && (
-              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin inversiones en Cocos Capital</p>
+              <p className="px-4 py-4 text-[var(--nn-text-muted)] text-sm">Sin inversiones en Cocos Capital</p>
             )}
-            <div className="px-4 py-3 border-t border-[#d2deef] bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]/50">
+            <div className="px-4 py-3 border-t border-[var(--nn-border)] bg-[var(--nn-bg)]">
               <div className="flex justify-between">
-                <span className="font-bold text-[#0d2a5f]">Subtotal Cocos Capital</span>
-                <span className="font-bold text-[#1652c4]">{fmt(totalInversiones)}</span>
+                <span className="font-bold text-[var(--nn-true-blue)]">Subtotal Cocos Capital</span>
+                <span className="font-bold text-[var(--nn-true-blue)]">{fmt(totalInversiones)}</span>
               </div>
             </div>
           </div>
 
           {/* Histórico de Cauciones */}
-          <div className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
+          <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[var(--nn-border)]">
               <div>
-                <h2 className="text-lg font-semibold text-[#0d2a5f]">Histórico de Cauciones</h2>
-                <p className="text-sm text-[#5f769d]">Seguimiento diario: invertido vs dia anterior</p>
+                <h2 className="text-lg font-semibold text-[var(--nn-true-blue)]">Histórico de Cauciones</h2>
+                <p className="text-sm text-[var(--nn-text-muted)]">Seguimiento diario: invertido vs dia anterior</p>
               </div>
               {caucionesHistorial.length > 1 && (
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${caucionesDiff > 0 ? "bg-green-500/10 text-[#10b981]" : caucionesDiff < 0 ? "bg-red-500/10 text-[#ef4444]" : "bg-[#eef4ff] text-[#5f769d]"}`}>
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${caucionesDiff > 0 ? "bg-green-500/10 text-[#10b981]" : caucionesDiff < 0 ? "bg-red-500/10 text-[#ef4444]" : "bg-[#eef4ff] text-[var(--nn-text-muted)]"}`}>
                   {caucionesDiff !== 0 ? (
                     caucionesDiff > 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />
                   ) : null}
@@ -454,7 +454,7 @@ export default function ActivosPage() {
             </div>
 
             {caucionesChartData.length > 1 && (
-              <div className="p-4 border-b border-[#e1eaf7]">
+              <div className="p-4 border-b border-[var(--nn-border)]">
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={180}>
                     <LineChart data={caucionesChartData}>
@@ -462,7 +462,7 @@ export default function ActivosPage() {
                       <XAxis dataKey="fecha" stroke="#5a6f99" fontSize={11} />
                       <YAxis stroke="#5a6f99" fontSize={11} />
                       <Tooltip contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #d7e4ff", borderRadius: "8px", color: "#0a2a66" }} />
-                      <Line type="monotone" dataKey="Total" stroke="#1652c4" strokeWidth={2} dot />
+                      <Line type="monotone" dataKey="Total" stroke="var(--nn-true-blue)" strokeWidth={2} dot />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -470,17 +470,17 @@ export default function ActivosPage() {
             )}
 
             {caucionesHistorial.length > 0 ? (
-              <div className="divide-y divide-[#e1eaf7]">
+              <div className="divide-y divide-[var(--nn-border)]">
                 {caucionesHistorial.map((item, idx) => {
                   const prev = idx < caucionesHistorial.length - 1 ? Number(caucionesHistorial[idx + 1].monto) : Number(item.monto);
                   const diff = Number(item.monto) - prev;
                   return (
                     <div key={item.fecha} className="flex items-center justify-between px-4 py-3">
-                      <span className="text-[#5f769d]">{new Date(`${item.fecha}T00:00:00`).toLocaleDateString("es-AR")}</span>
+                      <span className="text-[var(--nn-text-muted)]">{new Date(`${item.fecha}T00:00:00`).toLocaleDateString("es-AR")}</span>
                       <div className="flex items-center gap-3">
-                        <span className="font-medium text-[#0d2a5f]">{fmt(Number(item.monto))}</span>
+                        <span className="font-medium text-[var(--nn-true-blue)]">{fmt(Number(item.monto))}</span>
                         {idx < caucionesHistorial.length - 1 && (
-                          <span className={`text-xs font-medium ${diff > 0 ? "text-[#10b981]" : diff < 0 ? "text-[#ef4444]" : "text-[#5f769d]"}`}>
+                          <span className={`text-xs font-medium ${diff > 0 ? "text-[#10b981]" : diff < 0 ? "text-[#ef4444]" : "text-[var(--nn-text-muted)]"}`}>
                             {diff > 0 ? "+" : ""}{fmt(diff)}
                           </span>
                         )}
@@ -490,7 +490,7 @@ export default function ActivosPage() {
                 })}
               </div>
             ) : (
-              <p className="px-4 py-4 text-[#6b84ac] text-sm">Sin registros de cauciones todavía</p>
+              <p className="px-4 py-4 text-[var(--nn-text-muted)] text-sm">Sin registros de cauciones todavía</p>
             )}
           </div>
 
@@ -498,31 +498,31 @@ export default function ActivosPage() {
           <Modal isOpen={modalActivo} onClose={() => setModalActivo(false)} title={editActivo ? "Editar" : "Agregar Activo/Inversión"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Entidad</label>
-                <select value={fEntidad} onChange={(e) => setFEntidad(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Entidad</label>
+                <select value={fEntidad} onChange={(e) => setFEntidad(e.target.value)} className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]">
                   {ENTIDADES.map((e) => <option key={e} value={e}>{e}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
-                <select value={fTipo} onChange={(e) => setFTipo(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Tipo</label>
+                <select value={fTipo} onChange={(e) => setFTipo(e.target.value)} className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]">
                   {TIPOS.map((t) => <option key={t} value={t}>{t === "activo" ? "Activo" : "Inversión"}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
-                <input type="text" value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ej: Caja de Ahorro, FIMA..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Descripción</label>
+                <input type="text" value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ej: Caja de Ahorro, FIMA..." className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto</label>
-                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Monto</label>
+                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <button onClick={() => saveActivo(false)} disabled={savingActivo} className="w-full py-2 rounded-lg bg-[#1650c7] hover:bg-[#1141a6] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
+                <button onClick={() => saveActivo(false)} disabled={savingActivo} className="w-full py-2 rounded-lg bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
                   {editActivo ? "Actualizar" : "Guardar"}
                 </button>
                 {!editActivo && (
-                  <button onClick={() => saveActivo(true)} disabled={savingActivo} className="w-full py-2 rounded-lg bg-[#1141a6] hover:bg-[#0d2f7a] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
+                  <button onClick={() => saveActivo(true)} disabled={savingActivo} className="w-full py-2 rounded-lg bg-[var(--nn-true-blue-hover)] hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
                     Guardar y agregar otro
                   </button>
                 )}
@@ -534,24 +534,24 @@ export default function ActivosPage() {
           <Modal isOpen={modalInv} onClose={() => setModalInv(false)} title={editInv ? "Editar Inversión Cocos" : "Agregar Inversión Cocos"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Tipo</label>
-                <select value={fInvTipo} onChange={(e) => setFInvTipo(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Tipo</label>
+                <select value={fInvTipo} onChange={(e) => setFInvTipo(e.target.value)} className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]">
                   {TIPOS_COCOS.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Descripción</label>
-                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="Descripción..." className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Descripción</label>
+                <input type="text" value={fInvDesc} onChange={(e) => setFInvDesc(e.target.value)} placeholder="Descripción..." className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto</label>
-                <input type="number" value={fInvMonto} onChange={(e) => setFInvMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Monto</label>
+                <input type="number" value={fInvMonto} onChange={(e) => setFInvMonto(e.target.value)} placeholder="0.00" className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Fecha</label>
-                <input type="date" value={fInvFecha} onChange={(e) => setFInvFecha(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Fecha</label>
+                <input type="date" value={fInvFecha} onChange={(e) => setFInvFecha(e.target.value)} className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
-              <button onClick={saveInv} disabled={savingInv} className="w-full py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
+              <button onClick={saveInv} disabled={savingInv} className="w-full py-2 rounded-lg bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
                 {editInv ? "Actualizar" : "Guardar"}
               </button>
             </div>

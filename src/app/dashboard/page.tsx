@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -124,10 +124,10 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f5f9ff]">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--nn-bg)]">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-11 w-11 animate-spin rounded-full border-2 border-[#1652c4] border-t-transparent" />
-          <p className="text-sm text-[#5f769d]">Cargando dashboard...</p>
+          <div className="h-11 w-11 animate-spin rounded-full border-2 border-[var(--nn-true-blue)] border-t-transparent" />
+          <p className="text-sm text-[var(--nn-text-muted)]">Cargando dashboard...</p>
         </div>
       </div>
     );
@@ -135,12 +135,12 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#f5f9ff]">
+      <div className="min-h-screen bg-[var(--nn-bg)]">
         <Sidebar />
         <main className="px-5 pb-8 md:px-10 md:pr-[18rem]">
           <div className="mx-auto max-w-7xl">
-            <div className="rounded-2xl border border-[#f1c0cf] bg-white p-6 shadow-[0_16px_34px_rgba(40,72,130,0.09)]">
-              <h1 className="mb-2 text-xl font-bold text-[#0d2a5f]">Error al cargar el dashboard</h1>
+            <div className="rounded-xl border border-[var(--nn-border-strong)] bg-[var(--nn-snow-white)] p-6">
+              <h1 className="mb-2 text-xl font-bold text-[var(--nn-true-blue)]">Error al cargar el dashboard</h1>
               <p className="text-[#b42355]">{error}</p>
             </div>
           </div>
@@ -171,14 +171,14 @@ export default function DashboardPage() {
   const scoreFinanciero = patrimonioData?.metricas?.score_financiero_100 ?? null;
 
   const getScoreColor = (score: number | null) => {
-    if (score === null) return "text-[#0d2a5f]";
+    if (score === null) return "text-[var(--nn-true-blue)]";
     if (score < 40) return "text-[#cf2f61]";
     if (score < 70) return "text-[#c68900]";
     return "text-[#12945f]";
   };
 
   const getAhorroColor = (pct: number | null) => {
-    if (pct === null) return "text-[#0d2a5f]";
+    if (pct === null) return "text-[var(--nn-true-blue)]";
     if (pct < 10) return "text-[#cf2f61]";
     if (pct < 25) return "text-[#c68900]";
     return "text-[#12945f]";
@@ -249,31 +249,30 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f9ff]">
+    <div className="min-h-screen bg-[var(--nn-bg)]">
       <Sidebar />
       <main className="px-5 pb-8 md:px-10 md:pr-[18rem]">
         <div className="mx-auto max-w-7xl space-y-7">
-          <section className="relative overflow-hidden rounded-[28px] border border-[#d5e1f4] bg-gradient-to-r from-[#0d2a5f] to-[#1757ca] px-6 py-7 text-white shadow-[0_24px_50px_rgba(18,58,130,0.35)] md:px-9">
-            <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
-            <p className="text-[11px] uppercase tracking-[0.22em] text-blue-100">Vista General</p>
+          <section className="overflow-hidden rounded-xl border border-[var(--nn-border)] bg-[var(--nn-true-blue)] px-6 py-7 text-[var(--nn-snow-white)] md:px-9">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--nn-snow-white)]/90">Vista General</p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">Dashboard financiero</h1>
-            <p className="mt-2 max-w-2xl text-sm text-blue-100 md:text-base">Control diario de ingresos, egresos y balance anual con una visual de tendencia simple.</p>
+            <p className="mt-2 max-w-2xl text-sm text-[var(--nn-snow-white)]/90 md:text-base">Control diario de ingresos, egresos y balance anual con una visual de tendencia simple.</p>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
               <button
                 onClick={handleUpdateLocal}
                 disabled={updatingLocal || publishing}
-                className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex w-fit items-center rounded-lg border border-[var(--nn-snow-white)]/40 bg-[var(--nn-snow-white)]/10 px-4 py-2 text-sm font-semibold text-[var(--nn-snow-white)] transition-colors hover:bg-[var(--nn-snow-white)]/20 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {updatingLocal ? "Actualizando..." : "Actualizar local"}
               </button>
               <button
                 onClick={handlePublish}
                 disabled={updatingLocal || publishing}
-                className="inline-flex w-fit items-center rounded-xl border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex w-fit items-center rounded-lg border border-[var(--nn-snow-white)]/40 bg-[var(--nn-snow-white)]/10 px-4 py-2 text-sm font-semibold text-[var(--nn-snow-white)] transition-colors hover:bg-[var(--nn-snow-white)]/20 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {publishing ? "Publicando..." : "Publicar a produccion"}
               </button>
-              {syncStatus && <p className="text-xs text-blue-100">{syncStatus}</p>}
+              {syncStatus && <p className="text-xs text-[var(--nn-snow-white)]/80">{syncStatus}</p>}
             </div>
           </section>
 
@@ -285,19 +284,19 @@ export default function DashboardPage() {
             onMonedaChange={setMoneda}
           />
 
-          <div className="rounded-2xl border border-[#d6e2f4] bg-gradient-to-r from-[#eaf1ff] to-[#ffffff] p-6 shadow-[0_12px_28px_rgba(23,66,133,0.09)]">
+          <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-medium text-[#6078a0]">Total Patrimonio (ARS)</p>
-                <p className="mt-2 text-3xl font-bold text-[#0d2a5f]">
+                <p className="text-sm font-medium text-[var(--nn-text-muted)]">Total Patrimonio (ARS)</p>
+                <p className="mt-2 text-3xl font-bold text-[var(--nn-true-blue)]">
                   $ {patrimonioTotalPesos.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </p>
-                <p className="mt-1 text-xs text-[#6e84aa]">
+                <p className="mt-1 text-xs text-[var(--nn-text-muted)]">
                   Activos e inversiones + Cocos (ultima caucion) + dolares convertidos.
                 </p>
               </div>
               {patrimonioData?.comparacion?.tiene_dato_ayer && (
-                <div className={`rounded-xl px-3 py-2 text-sm font-semibold ${Number(patrimonioData.comparacion.variacion_ars) >= 0 ? "bg-green-500/10 text-[#12945f]" : "bg-red-500/10 text-[#cf2f61]"}`}>
+                <div className={`rounded-lg px-3 py-2 text-sm font-semibold ${Number(patrimonioData.comparacion.variacion_ars) >= 0 ? "bg-green-500/10 text-[#12945f]" : "bg-red-500/10 text-[#cf2f61]"}`}>
                   {Number(patrimonioData.comparacion.variacion_ars) >= 0 ? "+" : ""}
                   {formatMonto(Number(patrimonioData.comparacion.variacion_ars))} vs ayer
                 </div>
@@ -307,35 +306,35 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Ahorro mensual</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Ahorro mensual</p>
               <p className={`mt-2 text-2xl font-bold ${getAhorroColor(ahorroMensualPct)}`}>
                 {ahorroMensualPct === null ? "-" : `${ahorroMensualPct.toFixed(1)}%`}
               </p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Runway</p>
-              <p className="mt-2 text-2xl font-bold text-[#0d2a5f]">
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Runway</p>
+              <p className="mt-2 text-2xl font-bold text-[var(--nn-true-blue)]">
                 {runwayMeses === null ? "-" : `${runwayMeses.toFixed(1)} meses`}
               </p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Concentracion USD</p>
-              <p className="mt-2 text-2xl font-bold text-[#1652c4]">
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Concentracion USD</p>
+              <p className="mt-2 text-2xl font-bold text-[var(--nn-true-blue)]">
                 {patrimonioData?.concentracion ? `${patrimonioData.concentracion.dolares_pct.toFixed(1)}%` : "-"}
               </p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Concentracion caucion</p>
-              <p className="mt-2 text-2xl font-bold text-[#5f63d6]">
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Concentracion caucion</p>
+              <p className="mt-2 text-2xl font-bold text-[var(--nn-light-blue)]">
                 {patrimonioData?.concentracion ? `${patrimonioData.concentracion.ultima_caucion_pct.toFixed(1)}%` : "-"}
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Score financiero</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Score financiero</p>
               <p className={`mt-2 text-2xl font-bold ${getScoreColor(scoreFinanciero)}`}>
                 {scoreFinanciero === null ? "-" : `${scoreFinanciero.toFixed(0)}/100`}
               </p>
@@ -343,28 +342,28 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Activos + inv. entidades</p>
-              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.activos_ars || 0))}</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Activos + inv. entidades</p>
+              <p className="mt-2 text-xl font-bold text-[var(--nn-true-blue)]">{formatMonto(Number(patrimonioData?.breakdown?.activos_ars || 0))}</p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Cocos sin cauciones</p>
-              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.inversiones_cocos_sin_cauciones_ars || 0))}</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Cocos sin cauciones</p>
+              <p className="mt-2 text-xl font-bold text-[var(--nn-true-blue)]">{formatMonto(Number(patrimonioData?.breakdown?.inversiones_cocos_sin_cauciones_ars || 0))}</p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Ultima caucion</p>
-              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.ultima_caucion_ars || 0))}</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Ultima caucion</p>
+              <p className="mt-2 text-xl font-bold text-[var(--nn-true-blue)]">{formatMonto(Number(patrimonioData?.breakdown?.ultima_caucion_ars || 0))}</p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-5 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6078a0]">Dolares en ARS</p>
-              <p className="mt-2 text-xl font-bold text-[#0d2a5f]">{formatMonto(Number(patrimonioData?.breakdown?.dolares_ars || 0))}</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--nn-text-muted)]">Dolares en ARS</p>
+              <p className="mt-2 text-xl font-bold text-[var(--nn-true-blue)]">{formatMonto(Number(patrimonioData?.breakdown?.dolares_ars || 0))}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            <div className="rounded-2xl border border-[#d5e8dc] bg-white p-6 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6">
               <div className="mb-4 flex items-center justify-between">
-                <div className="rounded-xl bg-[#eafaf0] p-3">
+                <div className="rounded-lg bg-[#eafaf0] p-3">
                   <TrendingUp className="text-[#12945f]" size={20} />
                 </div>
                 {diffIng !== 0 && (
@@ -374,13 +373,13 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-              <p className="text-sm font-medium text-[#6078a0]">Ingresos del Mes</p>
+              <p className="text-sm font-medium text-[var(--nn-text-muted)]">Ingresos del Mes</p>
               <p className="mt-2 text-3xl font-bold text-[#12945f]">{formatMonto(ingMesActual)}</p>
             </div>
 
-            <div className="rounded-2xl border border-[#f0d8e1] bg-white p-6 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6">
               <div className="mb-4 flex items-center justify-between">
-                <div className="rounded-xl bg-[#ffeef3] p-3">
+                <div className="rounded-lg bg-[#ffeef3] p-3">
                   <TrendingDown className="text-[#cf2f61]" size={20} />
                 </div>
                 {diffEgr !== 0 && (
@@ -390,17 +389,17 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-              <p className="text-sm font-medium text-[#6078a0]">Egresos del Mes</p>
+              <p className="text-sm font-medium text-[var(--nn-text-muted)]">Egresos del Mes</p>
               <p className="mt-2 text-3xl font-bold text-[#cf2f61]">{formatMonto(egrMesActual)}</p>
             </div>
 
-            <div className="rounded-2xl border border-[#d8e4f5] bg-white p-6 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6">
               <div className="mb-4 flex items-center justify-between">
-                <div className="rounded-xl bg-[#eaf1ff] p-3">
-                  <Wallet className="text-[#1652c4]" size={20} />
+                <div className="rounded-lg bg-[var(--nn-primary-soft)] p-3">
+                  <Wallet className="text-[var(--nn-true-blue)]" size={20} />
                 </div>
               </div>
-              <p className="text-sm font-medium text-[#6078a0]">Balance del Mes</p>
+              <p className="text-sm font-medium text-[var(--nn-text-muted)]">Balance del Mes</p>
               <p className={`mt-2 text-3xl font-bold ${ingMesActual - egrMesActual >= 0 ? "text-[#12945f]" : "text-[#cf2f61]"}`}>
                 {formatMonto(ingMesActual - egrMesActual)}
               </p>
@@ -408,35 +407,35 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-6 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-sm font-medium text-[#6078a0]">Total Ingresos {new Date().getFullYear()}</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6">
+              <p className="text-sm font-medium text-[var(--nn-text-muted)]">Total Ingresos {new Date().getFullYear()}</p>
               <p className="mt-2 text-2xl font-bold text-[#12945f]">{formatMonto(totalIngresosAnio)}</p>
             </div>
-            <div className="rounded-2xl border border-[#dce8f7] bg-white p-6 shadow-[0_10px_28px_rgba(23,66,133,0.07)]">
-              <p className="text-sm font-medium text-[#6078a0]">Total Egresos {new Date().getFullYear()}</p>
+            <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6">
+              <p className="text-sm font-medium text-[var(--nn-text-muted)]">Total Egresos {new Date().getFullYear()}</p>
               <p className="mt-2 text-2xl font-bold text-[#cf2f61]">{formatMonto(totalEgresosAnio)}</p>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[#d6e2f4] bg-white p-6 shadow-[0_14px_30px_rgba(23,66,133,0.08)] md:p-8">
-            <h2 className="mb-8 text-xl font-bold text-[#0d2a5f]">Ingresos vs Egresos por Mes</h2>
+          <div className="rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)] p-6 md:p-8">
+            <h2 className="mb-8 text-xl font-bold text-[var(--nn-true-blue)]">Ingresos vs Egresos por Mes</h2>
             <div className="h-96">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                 <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#dce6f6" />
-                  <XAxis dataKey="name" stroke="#5c779f" fontSize={12} />
-                  <YAxis stroke="#5c779f" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--nn-border)" />
+                  <XAxis dataKey="name" stroke="var(--nn-text-muted)" fontSize={12} />
+                  <YAxis stroke="var(--nn-text-muted)" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #cfdbef",
-                      borderRadius: "10px",
-                      color: "#0d2a5f",
+                      backgroundColor: "var(--nn-snow-white)",
+                      border: "1px solid var(--nn-border)",
+                      borderRadius: "8px",
+                      color: "var(--nn-true-blue)",
                     }}
                   />
-                  <Legend wrapperStyle={{ color: "#5c779f" }} />
-                  <Bar dataKey="Ingresos" fill="#1ba36a" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="Egresos" fill="#d73c6c" radius={[8, 8, 0, 0]} />
+                  <Legend wrapperStyle={{ color: "var(--nn-text-muted)" }} />
+                  <Bar dataKey="Ingresos" fill="#12945f" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Egresos" fill="#cf2f61" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

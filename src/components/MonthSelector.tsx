@@ -25,19 +25,19 @@ export default function MonthSelector({ mes, anio, onChange }: MonthSelectorProp
   };
 
   return (
-    <div className="inline-flex items-center rounded-xl border border-[#d3dff1] bg-white shadow-[0_8px_22px_rgba(22,70,152,0.08)]">
+    <div className="inline-flex items-center rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)]">
       <button
         onClick={prev}
-        className="rounded-l-xl border-r border-[#dbe5f4] p-2.5 text-[#56719c] transition-colors hover:bg-[#edf3ff] hover:text-[#0d2a5f]"
+        className="rounded-l-xl border-r border-[var(--nn-border)] p-2.5 text-[var(--nn-text-muted)] transition-colors hover:bg-[var(--nn-primary-soft)] hover:text-[var(--nn-true-blue)]"
       >
         <ChevronLeft size={16} />
       </button>
-      <span className="min-w-[150px] px-5 text-center text-sm font-semibold text-[#0d2a5f]">
+      <span className="min-w-[150px] px-5 text-center text-sm font-semibold text-[var(--nn-true-blue)]">
         {MESES[mes - 1]} {anio}
       </span>
       <button
         onClick={next}
-        className="rounded-r-xl border-l border-[#dbe5f4] p-2.5 text-[#56719c] transition-colors hover:bg-[#edf3ff] hover:text-[#0d2a5f]"
+        className="rounded-r-xl border-l border-[var(--nn-border)] p-2.5 text-[var(--nn-text-muted)] transition-colors hover:bg-[var(--nn-primary-soft)] hover:text-[var(--nn-true-blue)]"
       >
         <ChevronRight size={16} />
       </button>

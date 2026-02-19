@@ -79,36 +79,36 @@ export default function DollarBanner({ onCotizacionChange, onMonedaChange }: Dol
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#d2dff1] bg-white shadow-[0_14px_40px_rgba(23,60,130,0.09)]">
-      <div className="h-1 bg-gradient-to-r from-[#0d2a5f] via-[#1652c4] to-[#5e93fa]" />
+    <div className="overflow-hidden rounded-xl border border-[var(--nn-border)] bg-[var(--nn-snow-white)]">
+      <div className="h-0.5 bg-[var(--nn-true-blue)]" />
 
       <div className="flex flex-wrap items-center justify-between gap-6 px-5 py-5 md:px-7">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#ecf3ff]">
-            <DollarSign className="text-[#1652c4]" size={22} />
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--nn-primary-soft)]">
+            <DollarSign className="text-[var(--nn-true-blue)]" size={22} />
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6178a0]">Tipo de cambio USD / ARS</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--nn-text-muted)]">Tipo de cambio USD / ARS</p>
             {editing ? (
               <div className="mt-1 flex items-center gap-3">
                 <input
                   type="number"
                   value={tempVal}
                   onChange={(e) => setTempVal(e.target.value)}
-                  className="w-32 rounded-xl border border-[#cad8ef] bg-[#f8fbff] px-3 py-2 text-base font-semibold text-[#0d2a5f] outline-none focus:border-[#1652c4]"
+                  className="w-32 rounded-lg border border-[var(--nn-border)] bg-[var(--nn-bg)] px-3 py-2 text-base font-semibold text-[var(--nn-true-blue)] outline-none focus:border-[var(--nn-true-blue)]"
                   autoFocus
                   onKeyDown={(e) => e.key === "Enter" && saveCotizacion()}
                 />
-                <button onClick={saveCotizacion} className="text-sm font-semibold text-[#1652c4] hover:text-[#0f3c92]">
+                <button onClick={saveCotizacion} className="text-sm font-semibold text-[var(--nn-true-blue)] hover:text-[var(--nn-true-blue-hover)]">
                   Guardar
                 </button>
-                <button onClick={() => setEditing(false)} className="text-sm text-[#6178a0] hover:text-[#0d2a5f]">
+                <button onClick={() => setEditing(false)} className="text-sm text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)]">
                   Cancelar
                 </button>
               </div>
             ) : (
               <button
-                className="mt-1 text-3xl font-bold tracking-tight text-[#0d2a5f] transition-colors hover:text-[#1652c4]"
+                className="mt-1 text-3xl font-bold tracking-tight text-[var(--nn-true-blue)] transition-colors hover:text-[var(--nn-true-blue-hover)]"
                 onClick={() => {
                   setTempVal(String(cotizacion));
                   setEditing(true);
@@ -122,7 +122,7 @@ export default function DollarBanner({ onCotizacionChange, onMonedaChange }: Dol
 
         <button
           onClick={toggleMoneda}
-          className="inline-flex items-center gap-2 rounded-xl border border-[#c9d8f0] bg-[#f7faff] px-4 py-2.5 text-sm font-semibold text-[#12459f] transition-all hover:border-[#1652c4] hover:bg-[#ecf3ff]"
+          className="inline-flex items-center gap-2 rounded-lg border border-[var(--nn-border)] bg-[var(--nn-bg)] px-4 py-2.5 text-sm font-semibold text-[var(--nn-true-blue)] transition-colors hover:bg-[var(--nn-primary-soft)]"
         >
           <ArrowRightLeft size={16} />
           Mostrar en {moneda === "ARS" ? "USD" : "ARS"}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -102,7 +102,7 @@ export default function DolaresPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--nn-bg)]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
@@ -124,16 +124,16 @@ export default function DolaresPage() {
   })).filter((d) => d.value > 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f7faff] via-[#f5f9ff] to-[#eef4ff]">
+    <div className="min-h-screen bg-[var(--nn-bg)]">
       <Sidebar />
       <main className="p-5 md:p-10 md:pr-[18rem]">
         <div className="max-w-5xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-[#0d2a5f]">Dolares</h1>
-              <p className="text-[#5f769d]">Tenencias en dolares por ubicacion</p>
+              <h1 className="text-2xl font-bold text-[var(--nn-true-blue)]">Dolares</h1>
+              <p className="text-[var(--nn-text-muted)]">Tenencias en dolares por ubicacion</p>
             </div>
-            <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] text-white font-medium transition-colors">
+            <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] text-[var(--nn-snow-white)] font-medium transition-colors">
               <Plus size={18} /> Agregar
             </button>
           </div>
@@ -141,15 +141,15 @@ export default function DolaresPage() {
           <DollarBanner onCotizacionChange={setCotizacion} />
 
           {/* Total */}
-          <div className="bg-gradient-to-r from-[#e8f1ff] to-[#ffffff] rounded-xl border border-[#cfe0f6] p-6">
+          <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#e8f1ff] rounded-xl">
-                <DollarSign className="text-[#1652c4]" size={28} />
+              <div className="p-3 bg-[var(--nn-primary-soft)] rounded-xl">
+                <DollarSign className="text-[var(--nn-true-blue)]" size={28} />
               </div>
               <div>
-                <p className="text-sm text-[#5f769d]">Total en Dolares</p>
-                <p className="text-3xl font-bold text-[#1652c4]">U$S {totalUSD.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</p>
-                <p className="text-sm text-[#5f769d] mt-1">
+                <p className="text-sm text-[var(--nn-text-muted)]">Total en Dolares</p>
+                <p className="text-3xl font-bold text-[var(--nn-true-blue)]">U$S {totalUSD.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</p>
+                <p className="text-sm text-[var(--nn-text-muted)] mt-1">
                   Equivalente: $ {totalARS.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </p>
               </div>
@@ -159,8 +159,8 @@ export default function DolaresPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pie Chart */}
             {pieData.length > 0 && (
-              <div className="bg-white rounded-xl border border-[#d6e2f4] p-6">
-                <h2 className="text-lg font-semibold text-[#0d2a5f] mb-4">Distribucion</h2>
+              <div className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] p-6">
+                <h2 className="text-lg font-semibold text-[var(--nn-true-blue)] mb-4">Distribucion</h2>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
                     <PieChart>
@@ -193,7 +193,7 @@ export default function DolaresPage() {
                   {pieData.map((d, i) => (
                     <div key={d.name} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                      <span className="text-sm text-[#5f769d]">{d.name}</span>
+                      <span className="text-sm text-[var(--nn-text-muted)]">{d.name}</span>
                     </div>
                   ))}
                 </div>
@@ -208,29 +208,29 @@ export default function DolaresPage() {
                 const Icon = UBICACION_ICONS[ubi] || DollarSign;
 
                 return (
-                  <div key={ubi} className="bg-white rounded-xl border border-[#d6e2f4] overflow-hidden">
-                    <div className="flex items-center justify-between p-4 border-b border-[#d6e2f4]">
+                  <div key={ubi} className="bg-[var(--nn-snow-white)] rounded-xl border border-[var(--nn-border)] overflow-hidden">
+                    <div className="flex items-center justify-between p-4 border-b border-[var(--nn-border)]">
                       <div className="flex items-center gap-3">
-                        <Icon size={18} className="text-[#1652c4]" />
-                        <span className="font-medium text-[#0d2a5f]">{ubi}</span>
+                        <Icon size={18} className="text-[var(--nn-true-blue)]" />
+                        <span className="font-medium text-[var(--nn-true-blue)]">{ubi}</span>
                       </div>
-                      <span className="font-bold text-[#1652c4]">U$S {total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
+                      <span className="font-bold text-[var(--nn-true-blue)]">U$S {total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
                     </div>
                     {items.length > 0 ? (
                       <div className="divide-y divide-[#e1eaf7]">
                         {items.map((d) => (
-                          <div key={d.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#f5f8ff]/30 transition-colors">
-                            <span className="text-[#5f769d]">{d.detalle || ubi}</span>
+                          <div key={d.id} className="flex items-center justify-between px-4 py-3 hover:bg-[var(--nn-bg)] transition-colors">
+                            <span className="text-[var(--nn-text-muted)]">{d.detalle || ubi}</span>
                             <div className="flex items-center gap-3">
-                              <span className="font-medium text-[#0d2a5f]">U$S {Number(d.monto).toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
-                              <button onClick={() => openEdit(d)} className="text-[#6b84ac] hover:text-[#60a5fa]"><Pencil size={16} /></button>
-                              <button onClick={() => handleDelete(d.id)} className="text-[#6b84ac] hover:text-[#ef4444]"><Trash2 size={16} /></button>
+                              <span className="font-medium text-[var(--nn-true-blue)]">U$S {Number(d.monto).toLocaleString("es-AR", { minimumFractionDigits: 2 })}</span>
+                              <button onClick={() => openEdit(d)} className="text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)]"><Pencil size={16} /></button>
+                              <button onClick={() => handleDelete(d.id)} className="text-[var(--nn-text-muted)] hover:text-[#ef4444]"><Trash2 size={16} /></button>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="px-4 py-3 text-sm text-[#6b84ac]">Sin registros</p>
+                      <p className="px-4 py-3 text-sm text-[var(--nn-text-muted)]">Sin registros</p>
                     )}
                   </div>
                 );
@@ -242,8 +242,8 @@ export default function DolaresPage() {
           <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar dolares" : "Agregar dolares"}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Ubicacion</label>
-                <select value={fUbicacion} onChange={(e) => setFUbicacion(e.target.value)} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]">
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Ubicacion</label>
+                <select value={fUbicacion} onChange={(e) => setFUbicacion(e.target.value)} className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]">
                   {ubicacionesDisponibles.map((u) => <option key={u} value={u}>{u}</option>)}
                 </select>
                 {!editItem && (
@@ -253,12 +253,12 @@ export default function DolaresPage() {
                       value={fNuevaUbicacion}
                       onChange={(e) => setFNuevaUbicacion(e.target.value)}
                       placeholder="Nueva ubicacion..."
-                      className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]"
+                      className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]"
                     />
                     <button
                       type="button"
                       onClick={handleAddUbicacion}
-                      className="px-3 py-2 rounded-lg bg-[#0f3c92] hover:bg-[#0a2a66] text-white text-sm font-medium transition-colors"
+                      className="px-3 py-2 rounded-lg bg-[var(--nn-true-blue-hover)] hover:opacity-90 text-white text-sm font-medium transition-colors"
                     >
                       Crear
                     </button>
@@ -266,17 +266,17 @@ export default function DolaresPage() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">
                   Detalle {fUbicacion === "PRESTADO" && "(A quien?)"}
                 </label>
-                <input type="text" value={fDetalle} onChange={(e) => setFDetalle(e.target.value)} placeholder={fUbicacion === "PRESTADO" ? "Nombre de la persona..." : "Detalle opcional..."} className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <input type="text" value={fDetalle} onChange={(e) => setFDetalle(e.target.value)} placeholder={fUbicacion === "PRESTADO" ? "Nombre de la persona..." : "Detalle opcional..."} className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#5f769d] mb-1">Monto (USD)</label>
-                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[#f5f8ff] border border-[#d2deef] rounded-lg px-3 py-2 text-[#0d2a5f]" />
+                <label className="block text-sm font-medium text-[var(--nn-text-muted)] mb-1">Monto (USD)</label>
+                <input type="number" value={fMonto} onChange={(e) => setFMonto(e.target.value)} placeholder="0.00" className="w-full bg-[var(--nn-bg)] border border-[var(--nn-border)] rounded-lg px-3 py-2 text-[var(--nn-true-blue)]" />
               </div>
               <div>
-                <button onClick={handleSave} disabled={saving} className="w-full py-2 rounded-lg bg-[#1652c4] hover:bg-[#0f3c92] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
+                <button onClick={handleSave} disabled={saving} className="w-full py-2 rounded-lg bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] text-[var(--nn-snow-white)] disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium transition-colors">
                   {editItem ? "Actualizar" : "Guardar"}
                 </button>
               </div>

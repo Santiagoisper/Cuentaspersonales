@@ -1,16 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-noto-sans), "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Paleta Novo Nordisk: True Blue + Snow White, sin gradientes */
 :root {
-  --nn-primary: #1652c4;
-  --nn-primary-dark: #0f3c92;
-  --nn-primary-soft: #eaf1ff;
-  --nn-secondary: #0d2a5f;
-  --nn-bg: #f6f9ff;
+  --nn-true-blue: #003057;
+  --nn-true-blue-hover: #002540;
+  --nn-snow-white: #ffffff;
+  --nn-light-blue: #4a90d9;
+  --nn-bg: #f8fafc;
   --nn-surface: #ffffff;
-  --nn-text: #10264a;
-  --nn-text-muted: #5f769d;
-  --nn-border: #d6e1f2;
-  --nn-border-strong: #c2d2ec;
+  --nn-text: #003057;
+  --nn-text-muted: #5c6f82;
+  --nn-border: #d1dde8;
+  --nn-border-strong: #a8bccf;
+  /* Compatibilidad con componentes que usan nombres antiguos */
+  --nn-primary: #003057;
+  --nn-primary-dark: #002540;
+  --nn-primary-soft: #e8f0f8;
+  --nn-secondary: #003057;
 }
 
 * {
@@ -24,12 +34,9 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(circle at 8% -4%, #e3ecff 0%, transparent 42%),
-    radial-gradient(circle at 100% 0%, #d8e8ff 0%, transparent 35%),
-    linear-gradient(180deg, #f7faff 0%, #f2f7ff 100%);
+  background: var(--nn-bg);
   color: var(--nn-text);
-  font-family: "Aptos", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-noto-sans), "Noto Sans", "Segoe UI", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -40,16 +47,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #edf3ff;
+  background: #e8eef4;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #bfd0ee;
+  background: #a8bccf;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #97afd6;
+  background: #5c6f82;
 }
 
 table {
@@ -92,8 +99,8 @@ td {
 }
 
 .nn-glass {
-  background: color-mix(in srgb, var(--nn-surface) 86%, #f0f6ff 14%);
-  backdrop-filter: blur(8px);
+  background: var(--nn-surface);
+  border: 1px solid var(--nn-border);
 }
 
 input[type="number"]::-webkit-inner-spin-button,

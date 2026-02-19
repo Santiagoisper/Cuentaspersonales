@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -175,21 +175,21 @@ export default function EgresosPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f5f9ff]">
+    <div className="min-h-screen bg-[var(--nn-bg)]">
       <Sidebar />
 
       <main className="md:pr-[18rem]">
-        <div className="bg-white border-b border-gray-200">
+        <div className="border-b border-[var(--nn-border)] bg-[var(--nn-snow-white)]">
           <div className="max-w-6xl mx-auto px-6 md:px-10 py-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold text-[#1652c4] uppercase tracking-widest mb-1">Finanzas</p>
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Egresos</h1>
-                <p className="text-gray-500 mt-1 text-sm">Gastos mensuales organizados por categoria</p>
+                <p className="text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest mb-1">Finanzas</p>
+                <h1 className="text-3xl font-bold text-[var(--nn-true-blue)] tracking-tight">Egresos</h1>
+                <p className="text-[var(--nn-text-muted)] mt-1 text-sm">Gastos mensuales organizados por categoria</p>
               </div>
               <button
                 onClick={openAdd}
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#1652c4] hover:bg-[#0f3c92] text-white text-sm font-semibold transition-colors rounded-sm"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] text-[var(--nn-snow-white)] text-sm font-semibold transition-colors rounded-lg"
               >
                 <Plus size={16} />
                 Agregar egreso
@@ -204,14 +204,14 @@ export default function EgresosPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <MonthSelector mes={mes} anio={anio} onChange={handleMonthChange} />
 
-            <div className="bg-white border border-gray-200 rounded-sm px-6 py-4">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Total del mes</p>
+            <div className="bg-[var(--nn-snow-white)] border border-[var(--nn-border)] rounded-xl px-6 py-4">
+              <p className="text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest">Total del mes</p>
               <div className="flex items-center gap-4 mt-1">
-                <span className="text-2xl font-bold text-gray-900">{formatMonto(total)}</span>
+                <span className="text-2xl font-bold text-[var(--nn-true-blue)]">{formatMonto(total)}</span>
                 {diff !== 0 && (
                   <div
-                    className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-sm ${
-                      diff < 0 ? "bg-green-50 text-green-700" : "bg-[#eaf1ff] text-[#1652c4]"
+                    className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg ${
+                      diff < 0 ? "bg-green-500/10 text-[#12945f]" : "bg-[var(--nn-primary-soft)] text-[var(--nn-true-blue)]"
                     }`}
                   >
                     {diff > 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
@@ -226,34 +226,34 @@ export default function EgresosPage() {
             {orderedCategories.map((cat) => {
               const items = grouped[cat] || [];
               const catTotal = items.reduce((s, e) => s + Number(e.monto), 0);
-              const colors = CAT_COLORS[cat] || { dot: "bg-gray-400", text: "text-gray-700", bg: "bg-gray-50" };
+              const colors = CAT_COLORS[cat] || { dot: "bg-[var(--nn-text-muted)]", text: "text-[var(--nn-true-blue)]", bg: "bg-[var(--nn-bg)]" };
 
               return (
-                <div key={cat} className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <div key={cat} className="bg-[var(--nn-snow-white)] border border-[var(--nn-border)] rounded-xl overflow-hidden">
+                  <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--nn-border)]">
                     <div className="flex items-center gap-3">
                       <span className={`w-2 h-2 rounded-full flex-shrink-0 ${colors.dot}`} />
-                      <span className={`text-xs font-bold uppercase tracking-widest px-2.5 py-1 rounded-sm ${colors.bg} ${colors.text}`}>
+                      <span className={`text-xs font-bold uppercase tracking-widest px-2.5 py-1 rounded-lg ${colors.bg} ${colors.text}`}>
                         {cat}
                       </span>
                     </div>
-                    <span className="font-bold text-gray-900 text-sm">{formatMonto(catTotal)}</span>
+                    <span className="font-bold text-[var(--nn-true-blue)] text-sm">{formatMonto(catTotal)}</span>
                   </div>
 
                   {items.length > 0 ? (
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-[var(--nn-border)]">
                       {items.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50 transition-colors group">
-                          <span className="text-sm text-gray-600">{item.subcategoria}</span>
+                        <div key={item.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-[var(--nn-bg)] transition-colors group">
+                          <span className="text-sm text-[var(--nn-text-muted)]">{item.subcategoria}</span>
                           <div className="flex items-center gap-5">
-                            <span className="text-sm font-semibold text-gray-900 min-w-[90px] text-right">
+                            <span className="text-sm font-semibold text-[var(--nn-true-blue)] min-w-[90px] text-right">
                               {formatMonto(Number(item.monto))}
                             </span>
                             <div className="flex items-center gap-2 opacity-100">
-                              <button onClick={() => openEdit(item)} className="p-1.5 text-gray-400 hover:text-[#1652c4] transition-colors">
+                              <button onClick={() => openEdit(item)} className="p-1.5 text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)] transition-colors">
                                 <Pencil size={14} />
                               </button>
-                              <button onClick={() => handleDelete(item.id)} className="p-1.5 text-gray-400 hover:text-[#1652c4] transition-colors">
+                              <button onClick={() => handleDelete(item.id)} className="p-1.5 text-[var(--nn-text-muted)] hover:text-[var(--nn-true-blue)] transition-colors">
                                 <Trash2 size={14} />
                               </button>
                             </div>
@@ -262,7 +262,7 @@ export default function EgresosPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="px-6 py-3.5 text-sm text-gray-400 italic">Sin gastos registrados</p>
+                    <p className="px-6 py-3.5 text-sm text-[var(--nn-text-muted)] italic">Sin gastos registrados</p>
                   )}
                 </div>
               );
@@ -273,7 +273,7 @@ export default function EgresosPage() {
 
       <button
         onClick={openAdd}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[#1652c4] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(22,82,196,0.38)] transition-colors hover:bg-[#0f3c92] md:right-[18.5rem]"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[var(--nn-true-blue)] px-5 py-3 text-sm font-semibold text-[var(--nn-snow-white)] transition-colors hover:bg-[var(--nn-true-blue-hover)] md:right-[18.5rem]"
       >
         <Plus size={16} />
         Agregar egreso
@@ -282,7 +282,7 @@ export default function EgresosPage() {
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editItem ? "Editar Egreso" : "Nuevo Egreso"}>
         <div className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Categoria</label>
+            <label className="block text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest mb-2">Categoria</label>
             <select
               value={formCat}
               onChange={(e) => {
@@ -296,7 +296,7 @@ export default function EgresosPage() {
                 }
                 setFormSubcat(CATEGORIAS[value]?.[0] || CUSTOM_SUBCATEGORY_VALUE);
               }}
-              className="w-full border border-gray-300 rounded-sm px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#1652c4]"
+              className="w-full border border-[var(--nn-border)] rounded-lg px-3 py-2.5 text-sm text-[var(--nn-true-blue)] focus:outline-none focus:border-[var(--nn-true-blue)]"
             >
               {Object.keys(CATEGORIAS).map((c) => (
                 <option key={c} value={c}>
@@ -309,26 +309,26 @@ export default function EgresosPage() {
 
           {formCat === CUSTOM_CATEGORY_VALUE && (
             <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Nombre de categoria</label>
+              <label className="block text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest mb-2">Nombre de categoria</label>
               <input
                 type="text"
                 value={formCustomCat}
                 onChange={(e) => setFormCustomCat(e.target.value)}
                 placeholder="Ej: Salud, Viajes, Regalos"
-                className="w-full border border-gray-300 rounded-sm px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#1652c4]"
+                className="w-full border border-[var(--nn-border)] rounded-lg px-3 py-2.5 text-sm text-[var(--nn-true-blue)] focus:outline-none focus:border-[var(--nn-true-blue)]"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Subcategoria</label>
+            <label className="block text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest mb-2">Subcategoria</label>
             {formCat === CUSTOM_CATEGORY_VALUE ? (
               <input
                 type="text"
                 value={formCustomSubcat}
                 onChange={(e) => setFormCustomSubcat(e.target.value)}
                 placeholder="Ej: Turnos, suscripcion, compras varias"
-                className="w-full border border-gray-300 rounded-sm px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#1652c4]"
+                className="w-full border border-[var(--nn-border)] rounded-lg px-3 py-2.5 text-sm text-[var(--nn-true-blue)] focus:outline-none focus:border-[var(--nn-true-blue)]"
               />
             ) : (
               <select
@@ -338,7 +338,7 @@ export default function EgresosPage() {
                   setFormSubcat(value);
                   if (value !== CUSTOM_SUBCATEGORY_VALUE) setFormCustomSubcat("");
                 }}
-                className="w-full border border-gray-300 rounded-sm px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#1652c4]"
+                className="w-full border border-[var(--nn-border)] rounded-lg px-3 py-2.5 text-sm text-[var(--nn-true-blue)] focus:outline-none focus:border-[var(--nn-true-blue)]"
               >
                 {(CATEGORIAS[formCat] || []).map((s) => (
                   <option key={s} value={s}>
@@ -352,31 +352,31 @@ export default function EgresosPage() {
 
           {formCat !== CUSTOM_CATEGORY_VALUE && formSubcat === CUSTOM_SUBCATEGORY_VALUE && (
             <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Nombre de subcategoria</label>
+              <label className="block text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest mb-2">Nombre de subcategoria</label>
               <input
                 type="text"
                 value={formCustomSubcat}
                 onChange={(e) => setFormCustomSubcat(e.target.value)}
                 placeholder="Ej: Otro gasto de esta categoria"
-                className="w-full border border-gray-300 rounded-sm px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#1652c4]"
+                className="w-full border border-[var(--nn-border)] rounded-lg px-3 py-2.5 text-sm text-[var(--nn-true-blue)] focus:outline-none focus:border-[var(--nn-true-blue)]"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">Monto (ARS)</label>
+            <label className="block text-xs font-semibold text-[var(--nn-text-muted)] uppercase tracking-widest mb-2">Monto (ARS)</label>
             <input
               type="number"
               value={formMonto}
               onChange={(e) => setFormMonto(e.target.value)}
               placeholder="0"
-              className="w-full border border-gray-300 rounded-sm px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#1652c4]"
+              className="w-full border border-[var(--nn-border)] rounded-lg px-3 py-2.5 text-sm text-[var(--nn-true-blue)] focus:outline-none focus:border-[var(--nn-true-blue)]"
             />
           </div>
 
           <button
             onClick={handleSave}
-            className="w-full py-3 bg-[#1652c4] hover:bg-[#0f3c92] text-white text-sm font-semibold transition-colors rounded-sm mt-2"
+            className="w-full py-3 bg-[var(--nn-true-blue)] hover:bg-[var(--nn-true-blue-hover)] text-[var(--nn-snow-white)] text-sm font-semibold transition-colors rounded-lg mt-2"
           >
             {editItem ? "Actualizar" : "Guardar"}
           </button>
